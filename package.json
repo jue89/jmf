@@ -1,0 +1,20 @@
+{
+	"name": "accounting",
+	"version": "0.0.1",
+	"author": "Jue <me@jue.yt>",
+	"license": "MIT",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"dependencies": {
+		"fire-up": "^0.4.3",
+		"bluebird": "^2.4.3",
+		"express": "^4.10.6",
+		"posix": "^1.0.4"
+	},
+	"devDependencies": {
+		"mocha": "^2.1.0",
+		"should": "^4.4.2",
+		"request": "^2.51.0"
+	}
+}
