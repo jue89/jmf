@@ -2,9 +2,15 @@ var fireup = require('fire-up').newInjector( {
 	basePath: __dirname,
 	modules: [
 		'./config/*.js',
-		'./hooks/*.js',
 		'./modules/*/*.js'
 	]
 } )
 
-fireup( 'app', { use: [  ] } )
+// Override injected modules
+var override = [];
+
+// Get config
+if( process.env.CONFIG ) override.push( "config:" + process.env.CONFIG );
+
+// And here we go !
+fireup( 'app', { use: override } )
