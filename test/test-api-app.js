@@ -5,9 +5,11 @@ var client_pfx = new Buffer( 'MIILgQIBAzCCC0cGCSqGSIb3DQEHAaCCCzgEggs0MIILMDCCBe
 
 var should = require( 'should' );
 var fireup = require( 'fire-up' ).newInjector( {
-	basePath: __dirname,
+	basePath: __dirname + '/..',
+	bustRequireCache: true,
+	require: require,
 	modules: [
-		'../modules/app/*.js',
+		'./modules/app/*.js',
 		{ implements: 'config', factory: function() {
 			return {
 				app: { user: null, group: null },

@@ -15,6 +15,9 @@
 	"devDependencies": {
 		"mocha": "^2.1.0",
 		"should": "^4.4.2",
-		"request": "^2.51.0"
+		"request": "^2.51.0",
+		"gulp": "^3.8.10",
+		"gulp-mocha": "^2.0.0",
+		"gulp-util": "^3.0.2"
 	}
 }
