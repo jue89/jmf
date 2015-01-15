@@ -10,7 +10,10 @@
 		"fire-up": "^0.4.3",
 		"bluebird": "^2.4.3",
 		"express": "^4.10.6",
-		"posix": "^1.0.4"
+		"posix": "^1.0.4",
+		"knex": "^0.7.3",
+		"sqlite3": "^3.0.4",
+		"mysql": "^2.5.4"
 	},
 	"devDependencies": {
 		"mocha": "^2.1.0",

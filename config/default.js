@@ -15,5 +15,10 @@ module.exports.factory = function( fs ) { return {
 		key: fs.readFileSync('./server.key'),
 		cert: fs.readFileSync('./server.crt'),
 		ca: fs.readFileSync('./cacert.pem')
+	},
+	db: {
+		client: 'sqlite3',
+		connection: { filename: 'data.db' },
+		debug: true
 	}
 } }

@@ -1,2 +1,7 @@
 node_modules
 .*
+*.db
+*.pem
+*.key
+*.crt
+*.log
