@@ -1,8 +1,4 @@
-var pki = require( './pki.json' );
-var ca = new Buffer( pki.ca, 'base64' );
-var server_key = new Buffer( pki.server_key, 'base64' );
-var server_cert = new Buffer( pki.server_cert, 'base64' );
-var client_pfx = new Buffer( pki.client_pfx, 'base64' );
+var pki = require( '../pki/test_pki.js' );
 
 var should = require( 'should' );
 var fireup = require( 'fire-up' ).newInjector( {
@@ -17,9 +13,9 @@ var fireup = require( 'fire-up' ).newInjector( {
 			app: { user: null, group: null },
 			https: {
 				port: 8000,
-				ca: ca,
-				key: server_key,
-				cert: server_cert
+				ca: pki.ca,
+				key: pki.server_key,
+				cert: pki.server_cert
 			}
 		}; } },
 		{ implements: 'app/routes:schema', inject: ['schema'], factory: function(schema) { return {
@@ -35,10 +31,9 @@ var fireup = require( 'fire-up' ).newInjector( {
 	]
 } );
 var request = require( 'request' ).defaults( { agentOptions: {
-	ca: ca,
-	pfx: client_pfx,
-	passphrase: '1234567890',
-	rejectUnauthorized: false
+	ca: pki.ca,
+	pfx: pki.client_pfx,
+	passphrase: pki.client_pfx_password
 } } );
 
 var app;

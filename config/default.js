@@ -1,4 +1,4 @@
-/*jslint node: true */
+/* jslint node: true */
 'use strict';
 // Fire me up!
 
@@ -15,9 +15,9 @@ module.exports.factory = function( fs ) { return {
 	https: {
 		host: '::',
 		port: 8000,
-		key: fs.readFileSync('./server.key'),
-		cert: fs.readFileSync('./server.crt'),
-		ca: fs.readFileSync('./cacert.pem')
+		key: fs.readFileSync( __dirname + '/../pki/test_server.key' ),
+		cert: fs.readFileSync( __dirname + '/../pki/test_server.crt' ),
+		ca: fs.readFileSync( __dirname + '/../pki/test_ca.crt' )
 	},
 	db: {
 		client: 'sqlite3',
