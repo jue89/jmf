@@ -13,6 +13,7 @@ module.exports.factory = function( fs ) { return {
 		group: null
 	},
 	https: {
+		host: '::',
 		port: 8000,
 		key: fs.readFileSync('./server.key'),
 		cert: fs.readFileSync('./server.crt'),

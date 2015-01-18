@@ -42,7 +42,7 @@ module.exports.factory = function( P, Https, Express, posix, config, drivers, ro
 		}, app );
 
 		// Start server
-		server.listen( config.https.port, function() {
+		server.listen( config.https.port, config.https.host, function() {
 			// Drop previleges
 			var p = config.app;
 			if( p.user && p.group && process.setuid && process.setgid ) {
