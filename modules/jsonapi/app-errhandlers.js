@@ -1,9 +1,11 @@
+/* jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'app/errhandlers:jsonapi',
 	inject: [ ],
-}
+};
 
 module.exports.factory = function( BodyParser) { return {
 	priority: -1, // Register last!
@@ -20,4 +22,4 @@ module.exports.factory = function( BodyParser) { return {
 		} );
 
 	}
-} }
+}; };

@@ -1,40 +1,25 @@
+/* jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'app',
-	inject: [ 'require(bluebird)', 'require(https)', 'require(express)', 'require(posix)', 'config', 'app/drivers:*', 'app/routes:*', 'app/errhandlers:*' ],
-}
+	inject: [
+		'require(bluebird)',
+		'require(https)',
+		'require(express)',
+		'require(posix)',
+		'config',
+		'app/drivers:*',
+		'app/routes:*',
+		'app/errhandlers:*'
+	]
+};
 
 module.exports.factory = function( P, Https, Express, posix, config, drivers, routes, errhandlers ) {
 
-	function register( group, app ) {
-		// Collect all modules
-		var items = [];
-		for( var key in group ) items.push( group[key] );
-
-		// Order modules by priority starting with highest prio
-		items.sort( function( a, b ) {
-			if( typeof a.priority == 'number' && typeof b.priority == 'number' ) {
-				if( a.priority == b.priority ) {
-					return 0;
-				} else if( a.priority < b.priority ) {
-					return 1;
-				} else {
-					return -1;
-				}
-			} else {
-				return 0;
-			}
-		} );
-
-		// Call register function of each module
-		items.forEach( function( i ) {
-			i.register( app );
-		} );
-	}
-
 	return new P( function( resolve ) {
-		var app = Express();
+		var app = new Express();
 
 
 		// Install drivers
@@ -71,4 +56,32 @@ module.exports.factory = function( P, Https, Express, posix, config, drivers, ro
 			return resolve( server );
 		} );
 	} );
-}
+
+	// Helper function to register modules with the Express app
+	function register( group, app ) {
+		// Collect all modules
+		var items = [];
+		for( var key in group ) items.push( group[key] );
+
+		// Order modules by priority starting with highest prio
+		items.sort( function( a, b ) {
+			if( typeof a.priority == 'number' && typeof b.priority == 'number' ) {
+				if( a.priority == b.priority ) {
+					return 0;
+				} else if( a.priority < b.priority ) {
+					return 1;
+				} else {
+					return -1;
+				}
+			} else {
+				return 0;
+			}
+		} );
+
+		// Call register function of each module
+		items.forEach( function( i ) {
+			i.register( app );
+		} );
+	}
+
+};

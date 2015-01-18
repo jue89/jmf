@@ -1,9 +1,11 @@
+/* jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'schema',
 	inject: [ 'require(bluebird)', 'require(util)', 'schema/error', 'schema/pattern:*' ]
-}
+};
 
 module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
@@ -24,7 +26,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 	// Append object to another
 	function append( dst, src ) {
 		for( var i in src ) {
-			dst[i] = src[i]
+			dst[i] = src[i];
 		}
 	}
 
@@ -38,7 +40,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 			if( gettype(obj[o]) == "object" ) {
 				append( ret, depack( obj[ o ], prefix + o + '.' ) );
 			} else {
-				ret[ prefix + o ] = obj[ o ]
+				ret[ prefix + o ] = obj[ o ];
 			}
 		}
 
@@ -76,14 +78,14 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 			}
 			
 			// Check for undefined or check pattern
-			for( var i in test ) {
+			for( i in test ) {
 				// Check whether field is defined in schema
 				if( ! schema[i] ) return reject( new SchemaError(
 					'illegal-field',
 					"Field " + i + " not allowed."
 				) );
 
-				var type = gettype( test[i] )
+				var type = gettype( test[i] );
 
 				// Check for right data type
 				if( schema[i].type && type != schema[i].type ) {
@@ -128,7 +130,6 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 			return resolve( obj );
 			
-		} ); }
-	}
-
-}
+		} ); };
+	};
+};

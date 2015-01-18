@@ -1,10 +1,13 @@
+/* jslint node: true */
+'use strict';
+
 var fireup = require('fire-up').newInjector( {
 	basePath: __dirname,
 	modules: [
 		'./config/*.js',
 		'./modules/*/*.js'
 	]
-} )
+} );
 
 // Override injected modules
 var override = [];
@@ -13,4 +16,4 @@ var override = [];
 if( process.env.CONFIG ) override.push( "config:" + process.env.CONFIG );
 
 // And here we go !
-fireup( 'app', { use: override } )
+fireup( 'app', { use: override } );

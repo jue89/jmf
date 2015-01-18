@@ -14,7 +14,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 					return args;
 				}
 			}
-		} } } },
+		} }; } },
 		{ implements: 'hook:h2', factory: function() { return { test: {
 			action1: {
 				priority: 0,
@@ -24,14 +24,14 @@ var fireup = require( 'fire-up' ).newInjector( {
 					return args;
 				}
 			}
-		} } } },
+		} }; } },
 		{ implements: 'hook:h3', inject: 'require(bluebird)', factory: function(P) { return { test: {
 			action2: {
 				action: function( args ) { return new P( function( resolve, reject ) {
 					reject();
 				} ); }
 			}
-		} } } },
+		} }; } }
 	]
 } );
 

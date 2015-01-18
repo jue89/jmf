@@ -1,9 +1,11 @@
+/*jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'config:production',
 	inject: [ 'require(fs)', 'config:default' ]
-}
+};
 
 module.exports.factory = function( fs, config ) {
 	config.app.user = 'www-data';
@@ -20,4 +22,4 @@ module.exports.factory = function( fs, config ) {
 	};
 
 	return config;
-}
+};

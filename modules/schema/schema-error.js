@@ -1,9 +1,11 @@
+/* jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'schema/error',
 	inject: [ 'require(util)' ]
-}
+};
 
 module.exports.factory = function( util ) {
 
@@ -19,4 +21,4 @@ module.exports.factory = function( util ) {
 
 	return SchemaError;
 
-}
+};

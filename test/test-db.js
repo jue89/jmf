@@ -6,28 +6,26 @@ var fireupOpts = {
 	require: require,
 	modules: [
 		'./modules/db/*.js',
-		{ implements: 'config', factory: function() {
-			return {
-				db: {
-					client: 'sqlite3',
-					connection: { filename: 'data.db' }
-				}
+		{ implements: 'config', factory: function() { return {
+			db: {
+				client: 'sqlite3',
+				connection: { filename: 'data.db' }
 			}
-		} },
+		}; } },
 		{ implements: 'db/schema:t1', factory: function() { return [ {
 			tableName: 'table1',
 			build: function( tbl ) {
 				tbl.integer( 'id' ).primary();
 				tbl.string( 'field' );
 			}
-		} ] } },
+		} ]; } },
 		{ implements: 'db/schema:t2', factory: function() { return [ {
 			tableName: 'table2',
 			build: function( tbl ) {
 				tbl.integer( 'id' ).primary();
 				tbl.string( 'field' );
 			}
-		} ] } }
+		} ]; } }
 	]
 };
 
@@ -54,7 +52,7 @@ describe( "Module db", function() {
 				exists.should.eql( true );
 				done();
 			} );
-		} )
+		} );
 	} );
 
 	it( "should insert data into table", function( done ) {
@@ -67,6 +65,6 @@ describe( "Module db", function() {
 				data.length.should.eql( 1 );
 				done();
 			} );
-		} )
+		} );
 	} );
 } );

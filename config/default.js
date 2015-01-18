@@ -1,9 +1,11 @@
+/*jslint node: true */
+'use strict';
 // Fire me up!
 
 module.exports = {
 	implements: 'config:default',
 	inject: [ 'require(fs)' ]
-}
+};
 
 module.exports.factory = function( fs ) { return {
 	app: {
@@ -21,4 +23,4 @@ module.exports.factory = function( fs ) { return {
 		connection: { filename: 'data.db' },
 		debug: true
 	}
-} }
+}; };
