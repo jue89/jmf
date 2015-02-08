@@ -19,9 +19,8 @@ module.exports.factory = function( fs ) { return {
 		cert: fs.readFileSync( __dirname + '/../pki/test_server.crt' ),
 		ca: fs.readFileSync( __dirname + '/../pki/test_ca.crt' )
 	},
-	db: {
-		client: 'sqlite3',
-		connection: { filename: 'data.db' },
-		debug: true
+	mongodb: {
+		host: [ 'localhost' ],
+		db: 'accounting'
 	}
 }; };

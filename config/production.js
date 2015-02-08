@@ -13,13 +13,5 @@ module.exports.factory = function( fs, config ) {
 
 	config.https.port = 443;
 
-	config.db.client = 'mysql';
-	config.db.connection = {
-		host     : '127.0.0.1',
-		user     : 'root',
-		password : 'root',
-		database : 'accounting'
-	};
-
 	return config;
 };

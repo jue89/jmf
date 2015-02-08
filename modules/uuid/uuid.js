@@ -9,7 +9,7 @@ module.exports = {
 
 module.exports.factory = function( uuid ) {
 	return function( obj ) {
-		obj.id = uuid.v4();
+		obj._id = uuid.v4();
 
 		return obj;
 	};
