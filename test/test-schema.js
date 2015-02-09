@@ -74,10 +74,10 @@ describe( "Module schema", function() {
 
 	it( "should complain wrong type (boolean)", function( done ) {
 		var test = schema( {
-			'field': { type: 'boolean' }
+			'field': { type: 'boolean', mandatory: true }
 		} );
 
-		test( { 'field': 1 } ).catch( function( e ) {
+		test( { 'field': 0 } ).catch( function( e ) {
 			e.type.should.eql( 'wrong-type' );
 			done();
 		} );

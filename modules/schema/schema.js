@@ -71,7 +71,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 			// Check for missing fields that are mandatory
 			for( var i in schema ) {
-				if( schema[i].mandatory && ! test[i] ) return reject( new SchemaError(
+				if( schema[i].mandatory && test[i] === undefined ) return reject( new SchemaError(
 					'missing-field',
 					"Field " + i + " is missing."
 				) );
