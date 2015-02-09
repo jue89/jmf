@@ -19,6 +19,28 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should set missing field to default", function( done ) {
+		var test = schema( {
+			'field': { default: 'test' }
+		} );
+
+		test( {} ).then( function( e ) {
+			e.field.should.eql( 'test' );
+			done();
+		} );
+	} );
+
+	it( "should set missing sub-field to default", function( done ) {
+		var test = schema( {
+			'field.subfield': { default: 'test' }
+		} );
+
+		test( {} ).then( function( e ) {
+			e.field.subfield.should.eql( 'test' );
+			done();
+		} );
+	} );
+
 	it( "should complain missing field", function( done ) {
 		var test = schema( {
 			'field': { mandatory: true }

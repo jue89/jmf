@@ -10,6 +10,7 @@ Implementing ```schema```: Returns a schema factory with the schema as first arg
 schemaFactory( {
 	Selector: {             // Selector for the field. Nested fields are depacked with '.' delimiter
 		mandatory: Boolean,  // Defined field is mandatory
+		default: Mixed,      // Default value for defined field
 		type: String,        // Type of field. Can be 'string', 'number', 'array', 'date' or extended by pattern modules.
 		minLength: Number,   // For strings: max length
 		maxLength: Number,   // For strings: min length

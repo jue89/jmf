@@ -47,6 +47,25 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 		return ret;
 	}
 
+	// Pack objects
+	function pack( obj ) {
+		var ret = {};
+
+		for( var o in obj ) {
+			var path = o.split( '.' );
+			var pointer = ret;
+			for( var i = 0; i < path.length - 1; i++ ) {
+				if( pointer[ path[i] ] === undefined ) {
+					pointer[ path[i] ] = {};
+					pointer = pointer[ path[i] ];
+				};
+			};
+			pointer[ path[ i ] ] = obj[ o ];
+		};
+
+		return ret;
+	}
+
 
 	// Prepare external pattern
 	var pattern = {};
@@ -71,10 +90,16 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 			// Check for missing fields that are mandatory
 			for( var i in schema ) {
-				if( schema[i].mandatory && test[i] === undefined ) return reject( new SchemaError(
-					'missing-field',
-					"Field " + i + " is missing."
-				) );
+				if( test[i] === undefined ) {
+					if( schema[i].mandatory ) {
+						return reject( new SchemaError(
+							'missing-field',
+							"Field " + i + " is missing."
+						) );
+					} else if( schema[i].default !== undefined ) {
+						test[i] = schema[i].default;
+					}
+				}
 			}
 			
 			// Check for undefined or check pattern
@@ -128,7 +153,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 				}
 			}
 
-			return resolve( obj );
+			return resolve( pack( test ) );
 			
 		} ); };
 	};
