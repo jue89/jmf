@@ -94,6 +94,16 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should not complain undefined field within object (wildcard)", function( done ) {
+		var test = schema( {
+			'field': { type: 'object' }
+		} );
+
+		test( { 'field' : { 'test': 1 } } ).then( function() {
+			done();
+		} );
+	} );
+
 	it( "should complain wrong type (boolean)", function( done ) {
 		var test = schema( {
 			'field': { type: 'boolean', mandatory: true }
@@ -222,7 +232,7 @@ describe( "Module schema", function() {
 
 	it( "should complain exceeded max length", function( done ) {
 		var test = schema( {
-			'field': { type: 'string', maxLength: 3 }
+			'field': { type: 'string', max: 3 }
 		} );
 
 		test( { 'field': '1234' } ).catch( function( e ) {
@@ -233,7 +243,7 @@ describe( "Module schema", function() {
 
 	it( "should accept right max length", function( done ) {
 		var test = schema( {
-			'field': { type: 'string', maxLength: 3 }
+			'field': { type: 'string', max: 3 }
 		} );
 
 		test( { 'field': '123' } ).then( function( ) {
@@ -243,7 +253,7 @@ describe( "Module schema", function() {
 
 	it( "should complain dropoing below min length", function( done ) {
 		var test = schema( {
-			'field': { type: 'string', minLength: 3 }
+			'field': { type: 'string', min: 3 }
 		} );
 
 		test( { 'field': '12' } ).catch( function( e ) {
@@ -254,10 +264,32 @@ describe( "Module schema", function() {
 
 	it( "should accept right min length", function( done ) {
 		var test = schema( {
-			'field': { type: 'string', minLength: 3 }
+			'field': { type: 'string', min: 3 }
 		} );
 
 		test( { 'field': '123' } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should complain exceeded max value", function( done ) {
+		var test = schema( {
+			'field': { type: 'number', max: 3 }
+		} );
+
+		test( { 'field': 4 } ).catch( function( e ) {
+			e.type.should.eql( 'max-value-exceeded' );
+			done();
+		} );
+	} );
+
+	it( "should complain dropoing below min value", function( done ) {
+		var test = schema( {
+			'field': { type: 'number', min: 3 }
+		} );
+
+		test( { 'field': 2 } ).catch( function( e ) {
+			e.type.should.eql( 'min-value-dropped-below' );
 			done();
 		} );
 	} );

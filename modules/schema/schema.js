@@ -103,10 +103,30 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 			// Check for undefined or check pattern
 			for( i in test ) {
 				// Check whether field is defined in schema
-				if( ! schema[i] ) return reject( new SchemaError(
-					'illegal-field',
-					"Field " + i + " not allowed."
-				) );
+				if( ! schema[i] ) {
+					// If it's not defined, check for wildcard schema
+					var path = i.split( '.' );
+
+					// Iterate through path and search for wildcards (type=="object")
+					var ok = false;
+					while( path.length > 1 ) {
+						path.splice( path.length - 1, 1 );
+						var x = path.join( '.' );
+						if( schema[x] ) {
+							ok = (schema[x].type == "object");
+							break;
+						}
+					}
+
+					// No wildcard found
+					if( ! ok ) return reject( new SchemaError(
+						'illegal-field',
+						"Field " + i + " not allowed."
+					) );
+
+					// Its okay --> check next one
+					continue;
+				}
 
 				var type = gettype( test[i] );
 
