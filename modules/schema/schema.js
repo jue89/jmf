@@ -118,17 +118,35 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 					) );
 				}
 
+				// Check for value
+				if( type == 'number' && schema[i].min ) {
+					if( test[i] <= schema[i].min ) {
+						return reject( new SchemaError(
+							'min-value-dropped-below',
+							"Field " + i + " is too small!"
+						) );
+					}
+				}
+				if( type == 'number' && schema[i].max ) {
+					if( test[i] >= schema[i].max ) {
+						return reject( new SchemaError(
+							'max-value-exceeded',
+							"Field " + i + " is too large!"
+						) );
+					}
+				}
+
 				// Check for length
-				if( type == 'string' && schema[i].minLength ) {
-					if( test[i].length < schema[i].minLength ) {
+				if( type == 'string' && schema[i].min ) {
+					if( test[i].length < schema[i].min ) {
 						return reject( new SchemaError(
 							'min-length-dropped-below',
 							"Field " + i + " is too short!"
 						) );
 					}
 				}
-				if( type == 'string' && schema[i].maxLength ) {
-					if( test[i].length > schema[i].maxLength ) {
+				if( type == 'string' && schema[i].max ) {
+					if( test[i].length > schema[i].max ) {
 						return reject( new SchemaError(
 							'max-length-exceeded',
 							"Field " + i + " is too long!"

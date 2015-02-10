@@ -12,8 +12,8 @@ schemaFactory( {
 		mandatory: Boolean,  // Defined field is mandatory
 		default: Mixed,      // Default value for defined field
 		type: String,        // Type of field. Can be 'string', 'number', 'array', 'date' or extended by pattern modules.
-		minLength: Number,   // For strings: max length
-		maxLength: Number,   // For strings: min length
+		min: Number,         // For strings: max length. For numbers: max value
+		max: Number,         // For strings: min length. For numbers: min value
 		pattern: RegExp,     // For strings: pattern that must be matching
 	},
 	...
