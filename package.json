@@ -17,7 +17,7 @@
 		"posix": "^1.0.4",
 		"uuid": "^2.0.1",
 		"body-parser": "^1.10.1",
-		"mongodb-promises": "^0.0.17"
+		"mongodb": "^1.4.30"
 	},
 	"devDependencies": {
 		"mocha": "^2.1.0",

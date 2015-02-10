@@ -24,4 +24,4 @@ gulp.task( 'watch', function() {
 } );
 
 // Default task
-gulp.task( 'default', [ 'mocha' ] );
+gulp.task( 'default', [ 'mocha', 'lint' ] );

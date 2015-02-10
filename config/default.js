@@ -20,7 +20,11 @@ module.exports.factory = function( fs ) { return {
 		ca: fs.readFileSync( __dirname + '/../pki/test_ca.crt' )
 	},
 	mongodb: {
-		host: [ 'localhost' ],
+		servers: [ {
+			host: 'localhost',
+			port: 27017,
+			options: { auto_reconnnect: true }
+		} ],
 		db: 'accounting'
 	}
 }; };
