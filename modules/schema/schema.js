@@ -55,13 +55,11 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 			var path = o.split( '.' );
 			var pointer = ret;
 			for( var i = 0; i < path.length - 1; i++ ) {
-				if( pointer[ path[i] ] === undefined ) {
-					pointer[ path[i] ] = {};
-					pointer = pointer[ path[i] ];
-				};
-			};
+				if( pointer[ path[i] ] === undefined ) pointer[ path[i] ] = {};
+				pointer = pointer[ path[i] ];
+			}
 			pointer[ path[ i ] ] = obj[ o ];
-		};
+		}
 
 		return ret;
 	}
