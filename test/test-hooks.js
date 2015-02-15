@@ -39,8 +39,8 @@ var hooks;
 describe( "Module hooks", function() {
 	before( function( done ) {
 		// Fetch Schema Module
-		fireup( 'hooks(test,action1 action2 action3)' ).then( function( m ) {
-			hooks = m;
+		fireup( 'hooks' ).then( function( m ) {
+			hooks = m( 'test', ['action1','action2','action3'] );
 			done();
 		} );
 	} );

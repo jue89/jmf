@@ -5,9 +5,9 @@ Helper module to work with injected hooks.
 
 ## Interface
 
-Implementing ```hooks(namespace,action1 action2 ...)```: Returns an array with all required (thenable) actions grouping all injected hooks.
+Implementing ```hooks```: Returns function with parameters namespace and array of actions. It returns an array with all required (thenable) actions grouping all injected hooks.
 
-Requires NodeJS modules ```Bluebird```.
+Requires NodeJS module ```Bluebird```.
 
 Requires ```hook:*```: Object with pattern:
 ``` Javascript

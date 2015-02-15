@@ -4,16 +4,15 @@
 
 module.exports = {
 	implements: 'hooks',
-	inject: [ 'require(bluebird)', 'hook:*' ],
-	type: 'multiple instances'
+	inject: [ 'require(bluebird)', 'hook:*' ]
 };
 
 module.exports.factory = function( P, hooks, module, actions ) {
 
-	return createHooks( hooks, module, actions.split( ' ' ) );
+	return getHooks;
 
 	// Function to create Hooks
-	function createHooks( hooks, module, actions ) {
+	function getHooks( module, actions ) {
 		var ret = {};
 
 		// Walk over all actions
