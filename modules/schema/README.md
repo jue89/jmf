@@ -5,7 +5,7 @@ Module checking objects against a given schema.
 
 ## Interface: Schema
 
-Implementing ```schema```: Returns a schema factory with the schema as first argument. The factory returns a thenable function, that will consume an object and returns a promise. It is resolved if the given objects fits into the schema and it is rejected with a SchemaError on mismatch.
+Implementing ```schema```: Returns a schema factory with the schema as first argument and the ignoreUndefinedField flag as second. The factory returns a thenable function, that will consume an object and returns a promise. It is resolved if the given objects fits into the schema and it is rejected with a SchemaError on mismatch.
 ``` Javascript
 schemaFactory( {
 	Selector: {             // Selector for the field. Nested fields are depacked with '.' delimiter

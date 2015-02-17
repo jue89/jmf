@@ -94,6 +94,14 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should not complain undefined field if they should be ignored", function( done ) {
+		var test = schema( { }, true );
+
+		test( { 'field' : 'test' } ).then( function() {
+			done();
+		} );
+	} );
+
 	it( "should not complain undefined field within object (wildcard)", function( done ) {
 		var test = schema( {
 			'field': { type: 'object' }

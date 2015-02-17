@@ -71,7 +71,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 
 	// Factory 
-	return function( schema ) {
+	return function( schema, ignoreUndefinedFields ) {
 
 		// Resolve external patterns
 		for( var s in schema ) {
@@ -104,6 +104,9 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 			for( i in test ) {
 				// Check whether field is defined in schema
 				if( ! schema[i] ) {
+					// Let undefined fields pass if they should be ignored
+					if( ignoreUndefinedFields ) continue;
+
 					// If it's not defined, check for wildcard schema
 					var path = i.split( '.' );
 
