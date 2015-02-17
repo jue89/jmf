@@ -95,8 +95,9 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 							"Field " + i + " is missing."
 						) );
 					} else if( schema[i].default !== undefined ) {
-						// If type is object it must be handled a little bit different ...
 						if( schema[i].type == 'object' ) {
+							// If type is object it must be handled a little bit different ...
+
 							// Search for childs
 							var found = false;
 							var re = new RegExp("^" + i.replace( /\./g, '\.'));
@@ -111,8 +112,16 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 							test[i] = {};
 							var defaultObj = depack( schema[i].default );
 							for( var key in defaultObj ) {
-								test[ i + '.' + key ] = defaultObj[ key ];
+								// Make sure arrays are copied
+								if( defaultObj[ key ] instanceof Array ) {
+									test[ i + '.' + key ] = defaultObj[ key ].slice();
+								} else {
+									test[ i + '.' + key ] = defaultObj[ key ];
+								}
 							}
+						} else if( schema[i].type == 'array' ) {
+							// Copy arrays
+							test[i] = schema[i].default.slice();
 						} else {
 							test[i] = schema[i].default;
 						}

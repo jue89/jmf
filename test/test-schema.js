@@ -32,11 +32,11 @@ describe( "Module schema", function() {
 
 	it( "should set missing object to default", function( done ) {
 		var test = schema( {
-			'field': { type: 'object', default: { sub: 1 } }
+			'field': { type: 'object', default: { sub: [1] } }
 		} );
 
 		test( {} ).then( function( e ) {
-			e.field.sub.should.eql( 1 );
+			e.field.sub[0].should.eql( 1 );
 			done();
 		} );
 	} );
