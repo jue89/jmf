@@ -30,6 +30,17 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should set missing object to default", function( done ) {
+		var test = schema( {
+			'field': { type: 'object', default: { sub: 1 } }
+		} );
+
+		test( {} ).then( function( e ) {
+			e.field.sub.should.eql( 1 );
+			done();
+		} );
+	} );
+
 	it( "should set missing sub-field to default", function( done ) {
 		var test = schema( {
 			'field.subfield': { default: 'test' }
@@ -104,10 +115,11 @@ describe( "Module schema", function() {
 
 	it( "should not complain undefined field within object (wildcard)", function( done ) {
 		var test = schema( {
-			'field': { type: 'object' }
+			'field': { type: 'object', default: {} }
 		} );
 
-		test( { 'field' : { 'test': 1 } } ).then( function() {
+		test( { 'field' : { 'test': 1 } } ).then( function( e ) {
+			e.field.test.should.eql( 1 );
 			done();
 		} );
 	} );

@@ -95,7 +95,27 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 							"Field " + i + " is missing."
 						) );
 					} else if( schema[i].default !== undefined ) {
-						test[i] = schema[i].default;
+						// If type is object it must be handled a little bit different ...
+						if( schema[i].type == 'object' ) {
+							// Search for childs
+							var found = false;
+							var re = new RegExp("^" + i.replace( /\./g, '\.'));
+							Object.keys(test).forEach( function( k ) {
+								found = found || re.test( k );
+							} );
+
+							// If child exists --> Roger!
+							if( found ) continue;
+
+							// Else -> copy default to object
+							test[i] = {};
+							var defaultObj = depack( schema[i].default );
+							for( var key in defaultObj ) {
+								test[ i + '.' + key ] = defaultObj[ key ];
+							}
+						} else {
+							test[i] = schema[i].default;
+						}
 					}
 				}
 			}
