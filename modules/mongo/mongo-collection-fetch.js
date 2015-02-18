@@ -72,7 +72,8 @@ module.exports.factory = function( P, schema ) {
 					resolve( result );
 				} );
 			} ),
-			limit: query.limit
+			limit: query.limit,
+			page: query.page
 		} ); } );
 			
 	};
