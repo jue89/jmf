@@ -13,6 +13,8 @@ Implementing ```mongo```: Returns handle to started MongoDB instance offering ``
  * ```update( query )```: Query is an object with fields: ```selector```, ```modifier```. 
  * ```drop( query )```: Query is an object with fields: ```selector```. 
 
+Implementing ```mongo/objectid```: Returns thenable function to add an ObjectID to a document.
+
 Requires module ```schema```.
 
 Requires NodeJS module ```mongodb```.
