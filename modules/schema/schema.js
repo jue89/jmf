@@ -100,12 +100,11 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 							// Search for childs
 							var found = false;
-							var re = new RegExp("^" + i.replace( /\./g, '\.'));
 							Object.keys(test).forEach( function( k ) {
-								found = found || re.test( k );
+								found = found || k.substr( 0, i.length ) == i;
 							} );
 
-							// If child exists --> Roger!
+							// If child exists --> Roger that!
 							if( found ) continue;
 
 							// Else -> copy default to object
