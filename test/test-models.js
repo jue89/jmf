@@ -55,7 +55,8 @@ var fireup = require( 'fire-up' ).newInjector( {
 				'_id': { mandatory: true, type: 'objectid' },
 				'name': { type: 'string', default: 'Test-c' },
 				'b': 'B'
-			}
+			},
+			reject: [ 'drop' ]
 		}; } }
 	]
 } );
@@ -200,6 +201,16 @@ describe( "Module models", function() {
 			'selector': { _id: idA[1] },
 		} } ).then( function( obj ) {
 			obj.res[0]._id.should.eql( idA[1] );
+			done();
+		} );
+	} );
+
+	it( "should reject dropping items from C due to defined model constraints", function( done ) {
+		models.C.drop( { req: {
+			'selector': { _id: idC },
+		} } ).catch( function( e ) {
+			e.name.should.eql( 'ModelsError' );
+			e.type.should.eql( 'action-prohibited' );
 			done();
 		} );
 	} );

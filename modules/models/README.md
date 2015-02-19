@@ -18,6 +18,7 @@ Requires ```model:*```: Object defining model:
 	collection: Object,       // Mongo collection (optional)
 	schema: Object,           // Schema (cf. schema module); Strings will indicate relations
 	index: Array,             // Index definition (optional)
+	reject: Array,            // Array of method names that should be rejected if called
 	idGenerator: Function     // ID generator function (optional)
 }
 ```
