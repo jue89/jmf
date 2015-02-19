@@ -53,7 +53,9 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 			.then( hooks.preInsert )
 			.then( function( query ) {
 				// Test doc
-				return testDoc( query.req ).return( query );
+				return testDoc( query.req )
+					.then( function( req ) { query.req = req; } )
+					.return( query );
 			})
 			.then( function( query ) {
 				// Check all foreign keys

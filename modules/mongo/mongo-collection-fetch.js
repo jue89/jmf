@@ -12,8 +12,8 @@ module.exports.factory = function( P, schema ) {
 	// Define schema for get arguments
 	var testQuery = schema ( {
 		'selector': { type: 'object' },
-		'limit': { type: 'number', default: 0 },
-		'page': { type: 'number', default: 0 },
+		'limit': { type: 'number', default: 0, min: 0 },
+		'page': { type: 'number', default: 0, min: 0 },
 		'sort': { type: 'string', default: '+_id' },
 		'fields': { type: 'array', default: [] }
 	} );
