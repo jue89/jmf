@@ -170,16 +170,16 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 				}
 
 				// Check for value
-				if( type == 'number' && schema[i].min ) {
-					if( test[i] <= schema[i].min ) {
+				if( type == 'number' && schema[i].min !== undefined ) {
+					if( test[i] < schema[i].min ) {
 						return reject( new SchemaError(
 							'min-value-dropped-below',
 							"Field " + i + " is too small!"
 						) );
 					}
 				}
-				if( type == 'number' && schema[i].max ) {
-					if( test[i] >= schema[i].max ) {
+				if( type == 'number' && schema[i].max !== undefined ) {
+					if( test[i] > schema[i].max ) {
 						return reject( new SchemaError(
 							'max-value-exceeded',
 							"Field " + i + " is too large!"
@@ -188,7 +188,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 				}
 
 				// Check for length
-				if( type == 'string' && schema[i].min ) {
+				if( type == 'string' && schema[i].min !== undefined ) {
 					if( test[i].length < schema[i].min ) {
 						return reject( new SchemaError(
 							'min-length-dropped-below',
@@ -196,7 +196,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 						) );
 					}
 				}
-				if( type == 'string' && schema[i].max ) {
+				if( type == 'string' && schema[i].max !== undefined ) {
 					if( test[i].length > schema[i].max ) {
 						return reject( new SchemaError(
 							'max-length-exceeded',
