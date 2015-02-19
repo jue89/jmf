@@ -10,10 +10,11 @@ module.exports = {
 module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
 	
 	// Get resources
+	var resource;
 	var resources = {};
 	var availableResources = [];
 	for( var r in resourceDefs ) {
-		var resource = resourceDefs[r];
+		resource = resourceDefs[r];
 		
 		// Fill required fields if not defined
 		if( ! resource.name ) resource.name = r.substring( r.indexOf( ':' ) + 1 );
@@ -30,7 +31,7 @@ module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
 
 	// Resolve relations
 	for( r in resources ) {
-		var resource = resources[r];
+		resource = resources[r];
 
 		// Find foreign keys
 		for( var s in resource.schema ) {
@@ -51,6 +52,19 @@ module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
 		resource.schema.updated_at = { type: 'date' };
 	}
 
+	// Create indices
+	var indexJobs = [];
+	for( r in resources ) {
+		resource = resources[r];
+
+		// Iterate through definitions
+		if( resource.index instanceof Array ) resource.index.forEach( function( i ) {
+			if( typeof i == 'string' ) i = [ i ];
+			indexJobs.push( resource.collection.index( i[ 0 ], i[ 1 ] ) );
+		} );
+		
+	}
+
 	// Prepare models object
 	var models = {};
 	for( r in resources ) {
@@ -58,6 +72,7 @@ module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
 	}
 	models._index = availableResources;
 
-	return models;
+	// Wait for index creation to finish and then return models object
+	return P.all( indexJobs ).return( models );
 
 };

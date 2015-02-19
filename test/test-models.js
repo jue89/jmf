@@ -30,7 +30,10 @@ var fireup = require( 'fire-up' ).newInjector( {
 			schema: {
 				'_id': { mandatory: true, type: 'objectid' },
 				'name': { type: 'string', default: 'Test-a' }
-			}
+			},
+			index: [
+				'name'
+			]
 		}; } },
 		{ implements: 'model:B', inject: ['mongo/objectid'], factory: function(oid) { return { 
 			idGenerator: oid,
@@ -39,7 +42,12 @@ var fireup = require( 'fire-up' ).newInjector( {
 				'name': { type: 'string', default: 'Test-b' },
 				'a1': 'A',
 				'a2': 'A'
-			}
+			},
+			index: [
+				[ 'name', { unique: true } ],
+				'a1',
+				'a2'
+			]
 		}; } },
 		{ implements: 'model:C', inject: ['mongo/objectid'], factory: function(oid) { return { 
 			idGenerator: oid,

@@ -17,6 +17,7 @@ Requires ```model:*```: Object defining model:
 	name: String,             // Name of the model (optional)
 	collection: Object,       // Mongo collection (optional)
 	schema: Object,           // Schema (cf. schema module); Strings will indicate relations
+	index: Array,             // Index definition (optional)
 	idGenerator: Function     // ID generator function (optional)
 }
 ```
