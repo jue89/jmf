@@ -4,10 +4,10 @@
 
 module.exports = {
 	implements: 'mongo/collection:update',
-	inject: [ 'require(bluebird)', 'schema' ]
+	inject: [ 'require(bluebird)', 'schema', 'objhelper' ]
 };
 
-module.exports.factory = function( P, schema ) {
+module.exports.factory = function( P, schema, oh ) {
 
 	// Define schema for get arguments
 	var testQuery = schema ( {
@@ -37,6 +37,9 @@ module.exports.factory = function( P, schema ) {
 		// - Execute update and return result
 		return testQuery( query )
 			.then( function( query ) { return new P( function( resolve, reject ) {
+
+				// Depack $set
+				query.modifier.$set = oh.depack( query.modifier.$set );
 
 				// Send insert request
 				col.findAndModify(
