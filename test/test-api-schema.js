@@ -24,7 +24,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				var test = schema( { 'id': { mandatory: true, type: 'number' } } );
 				app.post( '/schema', function( req, res, next ) {
 					test( req.body ).then( function( obj ) {
-						res.endJSONapiItem( [ obj ] );
+						res.endJSON( obj );
 					} ).catch( next );
 				} );
 			}
@@ -70,8 +70,8 @@ describe( "API schema", function() {
 		}, function( err, res, body ) {
 			body = JSON.parse( body );
 			res.statusCode.should.eql( 200 );
-			body.should.property( 'schema' );
-			body.schema.id.should.eql( 1 );
+			body.should.property( 'id' );
+			body.id.should.eql( 1 );
 			done( err );
 		} );
 	} );

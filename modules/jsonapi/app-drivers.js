@@ -36,48 +36,6 @@ module.exports.factory = function( BodyParser) { return {
 				} } );
 			};
 
-			// JSONAPI: List items
-			res.endJSONapiList = function( obj ) {
-				var ret = {};
-				var endpoint = endpointRE.exec( req.originalUrl )[1];
-
-				if( obj instanceof Array ) {
-					// Simple array -> no pagination
-					ret.meta = { count: obj.length };
-					ret[ endpoint ] = obj;
-				} else if( obj.data ) {
-					// Object with data field -> pagination
-					ret.meta = {
-						count: obj.count ? obj.count : obj.data.length,
-						page: obj.page ? obj.page : 0,
-						limit: obj.limit ? obj.limit: 0
-					};
-					ret[ endpoint ] = obj.data;
-				}
-				
-				return this.endJSON( ret );
-			};
-
-			// JSONAPI: Return single item
-			res.endJSONapiItem = function( obj ) {
-				// No single item is given -> Not found
-				if( obj.length != 1 ) return this.endJSONapiError( 404, 'not-found', "The requested item does not exist." );
-				
-				// Create return object
-				var ret = {};
-				var endpoint = endpointRE.exec( req.originalUrl )[1];
-				ret[ endpoint ] = obj[0];
-
-				return this.endJSON( ret );
-			};
-
-			// JSONAPI: Returns just whether ok is true
-			res.endJSONapiCheck = function( ok ) {
-				if( ! ok ) return this.endJSONapiError( 404, 'not-found', "The requested item does not exist." );
-				
-				return this.status( 200 ).end();
-			};
-
 			return next();
 		} );
 

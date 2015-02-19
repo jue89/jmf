@@ -71,6 +71,5 @@ module.exports.factory = function() {
 		return ret;
 	}
 
-
-}
+};
 
