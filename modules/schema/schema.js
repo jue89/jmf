@@ -4,70 +4,15 @@
 
 module.exports = {
 	implements: 'schema',
-	inject: [ 'require(bluebird)', 'require(util)', 'schema/error', 'schema/pattern:*' ]
+	inject: [ 'require(bluebird)', 'require(util)', 'objhelper', 'schema/error', 'schema/pattern:*' ]
 };
 
-module.exports.factory = function( P, util, SchemaError, extPattern ) {
-
-	// More adequate method for determining type
-	function gettype( obj ) {
-
-		if( obj === null ) return 'null';
-
-		if( typeof obj == 'object' ) {
-			if( obj instanceof Array ) return 'array';
-			if( obj instanceof Date ) return 'date';
-			if( obj instanceof RegExp ) return 'regexp';
-		}
-
-		return typeof obj;
-	}
+module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 	
-	// Append object to another
-	function append( dst, src ) {
-		for( var i in src ) {
-			dst[i] = src[i];
-		}
-	}
-
-	// Depack nested objects
-	function depack( obj, prefix ) {
-		if( ! prefix ) prefix = "";
-
-		var ret = {};
-
-		for( var o in obj ) {
-			if( gettype(obj[o]) == "object" ) {
-				append( ret, depack( obj[ o ], prefix + o + '.' ) );
-			} else {
-				ret[ prefix + o ] = obj[ o ];
-			}
-		}
-
-		return ret;
-	}
-
-	// Pack objects
-	function pack( obj ) {
-		var ret = {};
-
-		for( var o in obj ) {
-			var path = o.split( '.' );
-			var pointer = ret;
-			for( var i = 0; i < path.length - 1; i++ ) {
-				if( pointer[ path[i] ] === undefined ) pointer[ path[i] ] = {};
-				pointer = pointer[ path[i] ];
-			}
-			pointer[ path[ i ] ] = obj[ o ];
-		}
-
-		return ret;
-	}
-
 
 	// Prepare external pattern
 	var pattern = {};
-	for( var p in extPattern ) append( pattern, extPattern[p] );
+	for( var p in extPattern ) oh.append( pattern, extPattern[p] );
 
 
 	// Factory 
@@ -84,7 +29,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 		// Return check function (with fancy promises)
 		return function( obj ) { return new P( function( resolve, reject ) {
 
-			var test = depack( obj );
+			var test = oh.depack( obj );
 
 			// Check for missing fields that are mandatory
 			for( var i in schema ) {
@@ -109,7 +54,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 							// Else -> copy default to object
 							test[i] = {};
-							var defaultObj = depack( schema[i].default );
+							var defaultObj = oh.depack( schema[i].default );
 							for( var key in defaultObj ) {
 								// Make sure arrays are copied
 								if( defaultObj[ key ] instanceof Array ) {
@@ -159,7 +104,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 					continue;
 				}
 
-				var type = gettype( test[i] );
+				var type = oh.gettype( test[i] );
 
 				// Check for right data type
 				if( schema[i].type && type != schema[i].type ) {
@@ -207,7 +152,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 
 				// Check for pattern
 				if( type == 'string' && schema[i].pattern ) {
-					if( gettype( schema[i].pattern ) == "string" ) {
+					if( oh.gettype( schema[i].pattern ) == "string" ) {
 						schema[i].pattern = new RegExp( schema[i].pattern );
 					}
 					
@@ -220,7 +165,7 @@ module.exports.factory = function( P, util, SchemaError, extPattern ) {
 				}
 			}
 
-			return resolve( pack( test ) );
+			return resolve( oh.pack( test ) );
 			
 		} ); };
 	};

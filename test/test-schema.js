@@ -4,7 +4,8 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
-		'./modules/schema/*.js'
+		'./modules/schema/*.js',
+		'./modules/objhelper/*.js'
 	]
 } );
 

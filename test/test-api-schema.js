@@ -9,6 +9,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 		'./modules/app/*.js',
 		'./modules/jsonapi/*.js',
 		'./modules/schema/*.js',
+		'./modules/objhelper/*.js',
 		{ implements: 'config', factory: function() { return {
 			app: { user: null, group: null },
 			https: {

@@ -22,7 +22,9 @@ schemaFactory( {
 
 Requires NodeJS modules  ```Bluebird``` and ```util```.
 
-Require ```schema/pattern:*```: User-defined patterns.
+Requires ```objhelper```.
+
+Requires ```schema/pattern:*```: User-defined patterns.
 ``` Javascript
 {
 	Name: RegExp,             // Objects with type Name will be checked against the given RegExp

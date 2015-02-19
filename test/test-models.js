@@ -9,6 +9,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 		'./modules/hooks/*.js',
 		'./modules/mongo/*.js',
 		'./modules/schema/*.js',
+		'./modules/objhelper/*.js',
 		'./modules/timestamps/*.js',
 		'./modules/models/*.js',
 		{ implements: 'config', inject: ['require(uuid)'], factory: function(uuid) {

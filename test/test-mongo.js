@@ -5,6 +5,7 @@ var fireupOpts = {
 	require: require,
 	modules: [
 		'./modules/mongo/*.js',
+		'./modules/objhelper/*.js',
 		'./modules/schema/*.js',
 		{ implements: 'config', inject: ['require(uuid)'], factory: function(uuid) { return {
 			mongodb: {
