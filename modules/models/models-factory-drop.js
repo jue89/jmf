@@ -100,7 +100,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 				} ).then( function( res ) {
 					if( res != query.res.length) return P.reject( new ModelsError(
 						'drop-fail',
-						"Not all items have been dropped. I have no idea why?!"
+						"Not all items have been dropped. I have no idea why?! Chuck Norris might be able to help you."
 					) );
 				} ).return( query );
 

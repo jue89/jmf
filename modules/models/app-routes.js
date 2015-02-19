@@ -7,6 +7,7 @@ module.exports = {
 
 module.exports.factory = function( models ) {
 	
+	// Parse filter objects to selectors
 	function parseFilter( filter, schema ) {
 		var and = [];
 

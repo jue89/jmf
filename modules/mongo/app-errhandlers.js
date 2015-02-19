@@ -21,10 +21,12 @@ module.exports.factory = function() { return {
 
 			switch( err.code ) {
 				case 11000:
+					code = 409;
 					type = 'db-duplicate-key';
 					message = "Cannot create entry due to duplicate informations.";
 					break;
 				case 11001:
+					code = 409;
 					type = 'db-duplicate-key';
 					message = "Cannot update entry due to duplicate informations.";
 					break;
