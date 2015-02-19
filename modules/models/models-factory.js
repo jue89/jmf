@@ -18,7 +18,9 @@ module.exports.factory = function( P, ModelsError, factoryMethods ) {
 
 	return function( models, resources, resource ) {
 		
-		var methods = {};
+		var model = {};
+
+		// Add functions
 		for( var f in factoryMethods ) {
 
 			// Extract method name
@@ -27,14 +29,19 @@ module.exports.factory = function( P, ModelsError, factoryMethods ) {
 			if( ! ( resource.reject instanceof Array ) ||
 			    resource.reject.indexOf( methodName ) == -1 ) {
 				// Install proxy function
-				methods[methodName] = factoryMethods[f]( models, resources, resource );
+				model[methodName] = factoryMethods[f]( models, resources, resource );
 			} else {
 				// Install reject function
-				methods[methodName] = reject;
+				model[methodName] = reject;
 			}
 		}
 
-		return methods;
+		// Add information to model
+		model.name = resource.name;
+		model.schema = resource.schema;
+		model.index = resource.index;
+
+		return model;
 	};
 
 };
