@@ -11,9 +11,6 @@ module.exports.factory = function( BodyParser) { return {
 	priority: 1, // Register first!
 	register: function( app ) {
 
-		// Parse all JSON data
-		app.use( BodyParser.json( { type: 'application/*+json' } ) );
-
 		// Install helper functions
 		var endpointRE = /^\/(\w*)/;
 		app.use( function( req, res, next ) {
@@ -83,5 +80,8 @@ module.exports.factory = function( BodyParser) { return {
 
 			return next();
 		} );
+
+		// Parse all JSON data
+		app.use( BodyParser.json( ) );
 	}
 }; };

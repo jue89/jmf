@@ -50,7 +50,7 @@ describe( "API schema", function() {
 	it( "should reject schema mismatch", function( done ) {
 		request.post( {
 			url: 'https://localhost:8000/schema',
-			headers: { 'Content-Type': 'application/vnd.api+json' },
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify( { id: 'test' } )
 		}, function( err, res, body ) {
 			body = JSON.parse( body );
@@ -64,7 +64,7 @@ describe( "API schema", function() {
 	it( "should accept schema match", function( done ) {
 		request.post( {
 			url: 'https://localhost:8000/schema',
-			headers: { 'Content-Type': 'application/vnd.api+json' },
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify( { id: 1 } )
 		}, function( err, res, body ) {
 			body = JSON.parse( body );
