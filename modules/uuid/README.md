@@ -1,10 +1,10 @@
 # Module: UUID
 
-Module generating UUID and inserting it as id field to given objects.
+Module generating UUID.
 
 
 ## Interface
 
-Implementing ```uuid```: Returns thenable function.
+Implementing ```uuid```: Returns an UUID v4.
 
 Requires NodeJS module  ```uuid```.

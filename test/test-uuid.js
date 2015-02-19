@@ -18,12 +18,10 @@ describe( "Module uuid", function() {
 		} );
 	} );
 
-	it( "should add ID field with UUID to an object", function( done ) {
-		var obj = { name: 'test' };
+	it( "should return UUID", function( done ) {
+		var obj = uuid( obj );
 
-		obj = uuid( obj );
-
-		obj._id.should.match( /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/ );
+		obj.should.match( /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/ );
 
 		done();
 	} );

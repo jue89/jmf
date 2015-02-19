@@ -11,10 +11,8 @@ module.exports.factory = function( Mongo ) {
 
 	var ObjectID = Mongo.ObjectID;
 
-	return function( obj ) {
-		obj._id = new ObjectID().toString();
-
-		return obj;
-	}
+	return function() {
+		return new ObjectID().toString();
+	};
 
 };

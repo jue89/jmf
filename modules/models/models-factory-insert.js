@@ -43,7 +43,7 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 			.then( globalHooks.pre )
 			.then( function( query ) {
 				// Generate and add _id field if generator is defined
-				if( resource.idGenerator ) resource.idGenerator( query.req );
+				if( resource.idGenerator ) query.req._id = resource.idGenerator();
 
 				// Add timestamps
 				timestamps.add( query.req );
