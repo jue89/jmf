@@ -138,8 +138,15 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 						// Go through all results from main query
 						var ids = [];
 						query.res[ name ].forEach( function( v ) {
-							// If query does not contain th id, include it
-							if( ids.indexOf( v[ localField ] ) == -1 ) ids.push( v[ localField ] );
+							// Get ids to check against
+							var test;
+							if( v[ localField ] instanceof Array ) test = ids.slice();
+							else test = [ v[ localField ] ] ;
+
+							// Add ids to query array
+							test.forEach( function( id ) {
+								if( ids.indexOf( id ) == -1 ) ids.push( id );
+							} );
 						} );
 
 						// Create and append query

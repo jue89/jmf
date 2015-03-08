@@ -70,8 +70,8 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 						if( res.count === 0 ) return P.resolve();
 
 						var ids = [];
-						res.data.forEach( function( id ) {
-							ids.push( id );
+						res.data.forEach( function( item ) {
+							ids.push( item._id );
 						} );
 
 						return P.reject( new ModelsError(

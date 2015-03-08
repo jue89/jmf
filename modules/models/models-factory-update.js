@@ -69,22 +69,26 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 				// Check all foreign keys
 				var checkJobs = [];
 				for( var r in resource.reln ) {
-					var set = query.req.modifier.$set;
+					var fk = query.req.modifier.$set[r];
 
 					// Not in $set object? -> skip
-					if( ! set[r] ) continue;
+					if( ! fk ) continue;
+
+					// n-m relations are presented in arrays
+					if( ! (fk instanceof Array) ) fk = [ fk ];
 
 					// Go through all foreign keys
-					checkJobs.push( resources[ resource.reln[r] ].collection.fetch( {
-						'selector': { '_id': set[r] }
-					} ).then( function( res ) {
-						if( res.count != 1 ) return P.reject( new ModelsError(
-							'related-object-not-found',
-							"Related object " + r + " not found."
-						) );
-						return P.resolve();
-					} ) );
-
+					for( var i = 0; i < fk.length; i++ ) {
+						checkJobs.push( resources[ resource.reln[r] ].collection.fetch( {
+							'selector': { '_id': fk[i] }
+						} ).then( function( res ) {
+							if( res.count != 1 ) return P.reject( new ModelsError(
+								'related-object-not-found',
+								"Related object " + r + " not found."
+							) );
+							return P.resolve();
+						} ) );
+					}
 				}
 
 				// Wait for all check jobs

@@ -4,10 +4,10 @@
 
 module.exports = {
 	implements: 'models',
-	inject: [ 'require(bluebird)', 'models/factory', 'model:*', 'mongo' ]
+	inject: [ 'require(bluebird)', 'objhelper', 'models/factory', 'model:*', 'mongo' ]
 };
 
-module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
+module.exports.factory = function( P, objhelper, methodFactory, resourceDefs, mongo ) {
 	
 	// Get resources
 	var resource;
@@ -35,15 +35,25 @@ module.exports.factory = function( P, methodFactory, resourceDefs, mongo ) {
 
 		// Find foreign keys
 		for( var s in resource.schema ) {
-			if( typeof resource.schema[s] == 'string' ) {
-				var foreign = resource.schema[s];
+			if( resource.schema[s].foreign && typeof resource.schema[s].foreign == 'string' ) {
+				var f = resource.schema[s];
+				var foreign = f.foreign;
+				var mandatory = f.mandatory || false;
+				var multi = f.multi || false;
 				
 				// Save links
 				resource.reln[ s ] = foreign;
 				resources[ foreign ].rel1[ s ] = resource.name;
 				
 				// Overwirte schema
-				resource.schema[s] = resources[ foreign ].schema._id;
+				f = resource.schema[s] = {};
+				objhelper.append( f, resources[ foreign ].schema._id );
+				if( multi ) {
+					f.type = 'array';
+					if( typeof mandatory == 'number' ) f.min = mandatory;
+					else if( mandatory ) f.min = 1;
+				}
+				f.mandatory = mandatory ? true : false;
 			}
 		}
 

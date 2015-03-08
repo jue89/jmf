@@ -14,12 +14,20 @@ Requires NodeJS module ```Bluebird```.
 Requires ```model:*```: Object defining model:
 ``` Javascript
 {
-	name: String,             // Name of the model (optional)
-	collection: Object,       // Mongo collection (optional)
-	schema: Object,           // Schema (cf. schema module); Strings will indicate relations
-	index: Array,             // Index definition (optional)
-	reject: Array,            // Array of method names that should be rejected if called
-	idGenerator: Function     // ID generator function (optional)
+	name: String,                               // Name of the model (optional)
+	collection: Object,                         // Mongo collection (optional)
+	schema: {                                   // Model schema
+		Selector: { ... },                  // - cf. schema module
+		Selector: {                         // - Foreign key
+			foreign: String,            //   + Name of the foreign model
+			multi: Boolean,             //   + false: 1-n relation; true: n-m relation
+			mandatory: Boolean | Number //   + Relation is mandatory; on multi: minimum amount of keys
+		},
+		...
+	},           
+	index: Array,                               // Index definition (optional)
+	reject: Array,                              // Array of method names that should be rejected if called
+	idGenerator: Function                       // ID generator function (optional)
 }
 ```
 
