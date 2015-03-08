@@ -133,7 +133,8 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 				}
 
 				// Check for length
-				if( type == 'string' && schema[i].min !== undefined ) {
+				if( ( type == 'string' || type == 'array') &&
+				    schema[i].min !== undefined ) {
 					if( test[i].length < schema[i].min ) {
 						return reject( new SchemaError(
 							'min-length-dropped-below',
@@ -141,7 +142,8 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 						) );
 					}
 				}
-				if( type == 'string' && schema[i].max !== undefined ) {
+				if( ( type == 'string' || type == 'array') &&
+				    schema[i].max !== undefined ) {
 					if( test[i].length > schema[i].max ) {
 						return reject( new SchemaError(
 							'max-length-exceeded',

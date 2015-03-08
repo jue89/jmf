@@ -251,7 +251,7 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should complain exceeded max length", function( done ) {
+	it( "should complain exceeded max length (string)", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', max: 3 }
 		} );
@@ -262,7 +262,18 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should accept right max length", function( done ) {
+	it( "should complain exceeded max length (array)", function( done ) {
+		var test = schema( {
+			'field': { type: 'array', max: 3 }
+		} );
+
+		test( { 'field': ['1','2','3','4'] } ).catch( function( e ) {
+			e.type.should.eql( 'max-length-exceeded' );
+			done();
+		} );
+	} );
+
+	it( "should accept right max length (string)", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', max: 3 }
 		} );
@@ -272,12 +283,33 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should complain dropoing below min length", function( done ) {
+	it( "should accept right max length (array)", function( done ) {
+		var test = schema( {
+			'field': { type: 'array', max: 3 }
+		} );
+
+		test( { 'field': ['1','2','3'] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should complain dropping below min length (string)", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', min: 3 }
 		} );
 
 		test( { 'field': '12' } ).catch( function( e ) {
+			e.type.should.eql( 'min-length-dropped-below' );
+			done();
+		} );
+	} );
+
+	it( "should complain dropping below min length (array)", function( done ) {
+		var test = schema( {
+			'field': { type: 'array', min: 2 }
+		} );
+
+		test( { 'field': ['12'] } ).catch( function( e ) {
 			e.type.should.eql( 'min-length-dropped-below' );
 			done();
 		} );
@@ -304,7 +336,7 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should complain dropoing below min value", function( done ) {
+	it( "should complain dropping below min value", function( done ) {
 		var test = schema( {
 			'field': { type: 'number', min: 3 }
 		} );
