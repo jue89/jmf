@@ -1,11 +1,11 @@
 {
-	"name": "accounting",
+	"name": "jmf",
 	"version": "0.0.1",
 	"author": "Jue <me@jue.yt>",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jue89/accounting.git"
+		"url": "https://github.com/jue89/jmf.git"
 	},
 	"scripts": {
 		"start": "node index.js"
