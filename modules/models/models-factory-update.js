@@ -7,7 +7,7 @@ module.exports = {
 	inject: [ 'require(bluebird)', 'models/error', 'hooks', 'timestamps', 'schema' ]
 };
 
-module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema ) { return function( models, resources, resource ) {
+module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema ) { return function( resources, resource ) {
 
 	var name = resource.name;
 
@@ -38,9 +38,6 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 	// Returns the fetch function
 	return function( query ) {
 		if( typeof query != 'object' ) query = {};
-
-		// Reference current models object
-		query.self = models;
 
 		// Things going to happen:
 		// - Check query
@@ -106,4 +103,3 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 	};
 
 }; };
-

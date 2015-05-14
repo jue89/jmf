@@ -8,14 +8,14 @@ module.exports = {
 };
 
 module.exports.factory = function( P, objhelper, methodFactory, resourceDefs, mongo ) {
-	
+
 	// Get resources
 	var resource;
 	var resources = {};
 	var availableResources = [];
 	for( var r in resourceDefs ) {
 		resource = resourceDefs[r];
-		
+
 		// Fill required fields if not defined
 		if( ! resource.name ) resource.name = r.substring( r.indexOf( ':' ) + 1 );
 		if( ! resource.collection ) resource.collection = mongo.collection( resource.name );
@@ -40,11 +40,11 @@ module.exports.factory = function( P, objhelper, methodFactory, resourceDefs, mo
 				var foreign = f.foreign;
 				var mandatory = f.mandatory || false;
 				var multi = f.multi || false;
-				
+
 				// Save links
 				resource.reln[ s ] = foreign;
 				resources[ foreign ].rel1[ s ] = resource.name;
-				
+
 				// Overwirte schema
 				f = resource.schema[s] = {};
 				objhelper.append( f, resources[ foreign ].schema._id );
@@ -72,13 +72,13 @@ module.exports.factory = function( P, objhelper, methodFactory, resourceDefs, mo
 			if( typeof i == 'string' ) i = [ i ];
 			indexJobs.push( resource.collection.index( i[ 0 ], i[ 1 ] ) );
 		} );
-		
+
 	}
 
 	// Prepare models object
 	var models = {};
 	for( r in resources ) {
-		models[r] = methodFactory( models, resources, resources[r] );
+		models[r] = methodFactory( resources, resources[r] );
 	}
 	models._index = availableResources;
 
