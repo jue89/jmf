@@ -28,6 +28,9 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 		query.action = 'drop';
 		query.model = name;
 
+		// Expose database connection to query object. Might be useful for hooks.
+		query.models = resources;
+
 		// Things going to happen:
 		// - Check query
 		// - Call global hooks (global.pre)
