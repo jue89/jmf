@@ -6,7 +6,7 @@ module.exports = {
 };
 
 module.exports.factory = function( models ) {
-	
+
 	// Parse filter objects to selectors
 	function parseFilter( filter, schema ) {
 		var and = [];
@@ -73,6 +73,24 @@ module.exports.factory = function( models ) {
 		return { '$and': and };
 	}
 
+	function gatherReqInfo( req ) {
+		var info = {};
+
+		// If client certificate has been use, append this information
+		info.cert = req.connection.getPeerCertificate();
+
+		// IP address of the user; TODO: Reverse proxies?
+		info.ip = req.ip;
+
+		// Add request headers
+		info.headers = req.headers;
+
+		// Add query
+		info.query = req.query;
+
+		return info;
+	}
+
 	return { priority: 0, register: function( app ) { models._index.forEach( function( m ) {
 
 		// Current base path
@@ -81,7 +99,7 @@ module.exports.factory = function( models ) {
 
 		// Get list of model
 		app.get( base, function( req, res, next ) {
-			
+
 			// Build query:
 			var q = req.query;
 			var query = {};
@@ -115,6 +133,7 @@ module.exports.factory = function( models ) {
 
 			// Fetch from model
 			model.fetch( {
+				httpReq: gatherReqInfo( req ),
 				req: query
 			} ).then( function( query ) {
 				res.endJSON( query.res );
@@ -128,7 +147,7 @@ module.exports.factory = function( models ) {
 			// Build query:
 			var q = req.query;
 			var query = {};
-			
+
 			// - Filter
 			query.selector = { _id: req.params.id };
 
@@ -148,6 +167,7 @@ module.exports.factory = function( models ) {
 
 			// Fetch item
 			model.fetch( {
+				httpReq: gatherReqInfo( req ),
 				req: query
 			} ).then( function( query ) {
 				if( query.res.meta.count != 1 ) {
@@ -172,11 +192,12 @@ module.exports.factory = function( models ) {
 
 			// Insert into model
 			model.insert( {
+				httpReq: gatherReqInfo( req ),
 				req: req.body[m] || {}
 			} ).then( function( query ) {
 				res.endJSON( query.res );
 			} ).catch( next );
-			
+
 		} );
 
 		// Update item
@@ -185,7 +206,7 @@ module.exports.factory = function( models ) {
 			// Build query:
 			var q = req.query;
 			var query = {};
-			
+
 			// - Filter
 			query.selector = { _id: req.params.id };
 
@@ -195,13 +216,14 @@ module.exports.factory = function( models ) {
 
 			// Update item
 			model.update( {
+				httpReq: gatherReqInfo( req ),
 				req: query
 			} ).then( function( query ) {
 				var tmp = {};
 				tmp[ m ] = query.res;
 				res.endJSON( tmp );
 			} ).catch( next );
-			
+
 		} );
 
 		// Get list of model
@@ -210,13 +232,14 @@ module.exports.factory = function( models ) {
 			// Build query:
 			var q = req.query;
 			var query = {};
-			
+
 			// - Filter
 			query.selector = { _id: req.params.id };
 
 
 			// Fetch item
 			model.drop( {
+				httpReq: gatherReqInfo( req ),
 				req: query
 			} ).then( function( query ) {
 				if( query.res.length != 1 ) {
