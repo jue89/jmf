@@ -61,11 +61,11 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 
 				return query;
 			} )
-			.then( hooks.preUpdate )
 			.then( function( query ) {
 				// Check $set modifier
 				return testDoc( query.req.modifier.$set ).return( query );
 			} )
+			.then( hooks.preUpdate )
 			.then( function( query ) {
 				// Check all foreign keys
 				var checkJobs = [];
