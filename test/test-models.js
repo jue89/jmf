@@ -26,7 +26,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				}
 			};
 		} },
-		{ implements: 'model:A', inject: ['mongo/objectid'], factory: function(oid) { return { 
+		{ implements: 'model:A', inject: ['mongo/objectid'], factory: function(oid) { return {
 			idGenerator: oid,
 			schema: {
 				'_id': { mandatory: true, type: 'objectid' },
@@ -36,7 +36,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				'name'
 			]
 		}; } },
-		{ implements: 'model:B', inject: ['mongo/objectid'], factory: function(oid) { return { 
+		{ implements: 'model:B', inject: ['mongo/objectid'], factory: function(oid) { return {
 			idGenerator: oid,
 			schema: {
 				'_id': { mandatory: true, type: 'objectid' },
@@ -49,14 +49,22 @@ var fireup = require( 'fire-up' ).newInjector( {
 				'a2'
 			]
 		}; } },
-		{ implements: 'model:C', inject: ['mongo/objectid'], factory: function(oid) { return { 
+		{ implements: 'model:C', inject: ['mongo/objectid'], factory: function(oid) { return {
 			idGenerator: oid,
 			schema: {
 				'_id': { mandatory: true, type: 'objectid' },
 				'name': { type: 'string', default: 'Test-c' },
+				'secret': { type: 'string', default: 'hidden' },
 				'b': { foreign: 'B', multi: true, mandatory: true }
 			},
 			reject: [ 'drop' ]
+		}; } },
+		{ implements: 'hook:C', inject: [], factory: function() { return {
+			C: { itemFilter: { action: function( q ) {
+				q.items.forEach( function( i ) {
+					i.secret = "******";
+				} );
+			} } }
 		}; } }
 	]
 } );
@@ -84,7 +92,7 @@ describe( "Module models", function() {
 				idA[ obj.i ] = obj.res._id;
 			} ) );
 		}
-		
+
 		P.all( jobs ).then( function() { done(); } );
 	} );
 
@@ -146,11 +154,19 @@ describe( "Module models", function() {
 		} );
 	} );
 
-	it( "should fetch item from B and include a1, a2 and b", function( done ) {
+	it( "should fetch item from B with a1, a2 and b included and filter items in b", function( done ) {
 		models.B.fetch( {req:{include:['a1','a2','b']}} ).then( function( obj ) {
 			obj.res.linked.A[0]._id.should.eql( idA[0] );
 			obj.res.linked.A[1]._id.should.eql( idA[1] );
 			obj.res.linked.C[0]._id.should.eql( idC );
+			obj.res.linked.C[0].secret.should.eql( '******' );
+			done();
+		} );
+	} );
+
+	it( "should fetch and filter items from C", function( done ) {
+		models.C.fetch( ).then( function( obj ) {
+			obj.res.C[0].secret.should.eql( '******' );
 			done();
 		} );
 	} );

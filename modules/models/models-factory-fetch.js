@@ -13,7 +13,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 
 	// Obtain hooks
 	var globalHooks = getHooks( 'global', [ 'pre', 'post' ] );
-	var hooks = getHooks( name, [ 'preFetch', 'postFetch' ] );
+	var hooks = getHooks( name, [ 'preFetch', 'postFetch', 'itemFilter' ] );
 
 	// Test query
 	var testQuery = schema ( {
@@ -24,7 +24,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 		'req.fields': { type: 'object', default: {} },
 		'req.include': { type: 'array', default: [] }
 	}, true );
-	
+
 
 	// Returns the fetch function
 	return function( query ) {
@@ -81,9 +81,16 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 					'fields': query.req.fields[ name ]
 				} ).then( function( res ) {
 
+					// Filter all data items
+					return hooks.itemFilter( {
+						query: query, items: res.data
+					} ).return( res );
+
+				} ).then( function( res ) {
+
 					// Include result in response object
 					query.res = {
-						meta: { count: res.count, limit:res.limit, page: res.page }
+						meta: { count: res.count, limit: res.limit, page: res.page }
 					};
 					query.res[ name ] = res.data;
 
@@ -106,7 +113,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 
 					var queryStack = {};
 					query.req.include.forEach( function( i ) {
-						
+
 						// Set values for queries
 						var model, localField, remoteField;
 						if( resource.reln[ i ] ) {
@@ -157,15 +164,32 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 					} );
 
 					// Create query jobs from query stack
-					var includeJobs = [];
 					function createJob( q, stack ) {
+
+						// Create an include job
 						includeJobs.push( resources[ q ].collection.fetch( {
 							'selector': { '$or': stack.selectors },
 							'fields': stack.fields
 						} ).then( function( res ) {
+
+							// Get the item filter hook for the resource
+							var remoteHooks = getHooks( q, [ 'itemFilter' ] );
+
+							// Filter all data items
+							return remoteHooks.itemFilter( {
+								query: query,
+								items: res.data
+							} ).return( res );
+
+						} ).then( function( res ) {
+
+							// Attach included fields to response object
 							query.res.linked[ q ] = res.data;
+
 						} ) );
+
 					}
+					var includeJobs = [];
 					for( var q in queryStack ) createJob( q, queryStack[ q ] );
 
 					// Wait for all jobs
@@ -178,4 +202,3 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 	};
 
 }; };
-
