@@ -25,6 +25,10 @@ module.exports.factory = function( P, ModelsError, getHooks, timestamps, schema 
 	return function( query ) {
 		if( typeof query != 'object' ) query = {};
 
+		// Refernce to the current model and action (e.g. for global hooks)
+		query.action = 'insert';
+		query.model = name;
+
 		// Things going to happen:
 		// - Check query
 		// - Call global hooks (global.pre)
