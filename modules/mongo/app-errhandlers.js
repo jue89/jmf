@@ -23,12 +23,12 @@ module.exports.factory = function() { return {
 				case 11000:
 					code = 409;
 					type = 'db-duplicate-key';
-					message = "Cannot create entry due to duplicate informations.";
+					message = "Cannot create entry due to duplicate information.";
 					break;
 				case 11001:
 					code = 409;
 					type = 'db-duplicate-key';
-					message = "Cannot update entry due to duplicate informations.";
+					message = "Cannot update entry due to duplicate information.";
 					break;
 			}
 
@@ -36,4 +36,3 @@ module.exports.factory = function() { return {
 		} );
 	}
 }; };
-

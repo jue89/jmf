@@ -36,11 +36,11 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 		// Things going to happen:
 		// - Check query
 		// - Call global hooks (global.pre)
-		// - Call model.preInsert hooks
+		// - Call model.preFetch hooks
 		// - Check for all requested includes
 		// - Fetch from database
 		// - Create response object
-		// - Call model.postInsert hooks
+		// - Call model.postFetch hooks
 		// - Call global hooks (global.post)
 		return testQuery( query )
 			.then( globalHooks.pre )
@@ -140,7 +140,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 						query.res[ name ].forEach( function( v ) {
 							// Get ids to check against
 							var test;
-							if( v[ localField ] instanceof Array ) test = ids.slice();
+							if( v[ localField ] instanceof Array ) test = v[ localField ];
 							else test = [ v[ localField ] ] ;
 
 							// Add ids to query array
