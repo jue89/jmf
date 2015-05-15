@@ -219,9 +219,19 @@ module.exports.factory = function( models ) {
 				httpReq: gatherReqInfo( req ),
 				req: query
 			} ).then( function( query ) {
-				var tmp = {};
-				tmp[ m ] = query.res;
-				res.endJSON( tmp );
+
+				if( ! query.res ) {
+					res.endJSONapiError(
+						404,
+						'not-found',
+						"The requested item does not exist."
+					);
+				} else {
+					var tmp = {};
+					tmp[ m ] = query.res;
+					res.endJSON( tmp );
+				}
+
 			} ).catch( next );
 
 		} );
