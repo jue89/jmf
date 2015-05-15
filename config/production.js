@@ -8,10 +8,13 @@ module.exports = {
 };
 
 module.exports.factory = function( fs, config ) {
-	config.app.user = 'www-data';
-	config.app.group = 'www-data';
 
-	config.https.port = 443;
+	// Check whether systemd has prepared everything for us.
+	if( process.env.LISTEN_FDS && parseInt( process.env.LISTEN_FDS ) > 0 ) {
+		config.listen = {
+			fd: 3 // Systemd will open this for us. First socket offered.
+		};
+	}
 
 	return config;
 };

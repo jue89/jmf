@@ -11,7 +11,7 @@ If you would like to know the long term of the abbreviation *JMF*, invite me for
 
 ## Getting Started
 
-Install NodeJS (0.10 is tested) and NPM.
+Install NodeJS (0.12 is tested) and NPM.
 
 ```
 $ git clone https://github.com/jue89/jmf.git

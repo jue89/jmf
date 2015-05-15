@@ -9,12 +9,13 @@ var fireup = require( 'fire-up' ).newInjector( {
 		'./modules/app/*.js',
 		'./modules/jsonapi/*.js',
 		{ implements: 'config', factory: function() { return {
-			app: { user: null, group: null },
+			listen: { port: 8000, host : '::' },
 			https: {
-				port: 8000,
 				ca: pki.ca,
 				key: pki.server_key,
-				cert: pki.server_cert
+				cert: pki.server_cert,
+				requestCert: true,
+				rejectUnauthorized: true
 			}
 		}; } },
 		{ implements: 'app/routes:jsonapi', factory: function() { return {
