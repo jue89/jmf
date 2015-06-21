@@ -5,7 +5,8 @@ var fireup = require('fire-up').newInjector( {
 	basePath: __dirname,
 	modules: [
 		'./config/*.js',
-		'./modules/*/*.js'
+		'./modules/*/*.js',
+		'./app/*/*.js'
 	]
 } );
 
