@@ -8,6 +8,7 @@ module.exports = {
 };
 
 module.exports.factory = function( fs ) { return {
+	discovery: true,
 	listen: {
 		port: 8000,
 		host : '::'

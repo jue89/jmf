@@ -40,6 +40,7 @@ module.exports.factory = function( P, ModelsError, factoryMethods ) {
 		model.name = resource.name;
 		model.schema = resource.schema;
 		model.index = resource.index;
+		model.hidden = resource.hidden;
 
 		return model;
 	};

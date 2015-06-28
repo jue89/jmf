@@ -42,9 +42,15 @@ module.exports.factory = function( P, Https, Express, config, drivers, routes, e
 
 	// Helper function to register modules with the Express app
 	function register( group, app ) {
+
 		// Collect all modules
 		var items = [];
-		for( var key in group ) items.push( group[key] );
+		for( var key in group ) {
+			if( group[key] && group[key].register && typeof group[key].register == 'function'
+			) {
+				items.push( group[key] );
+			}
+		}
 
 		// Order modules by priority starting with highest prio
 		items.sort( function( a, b ) {
@@ -65,6 +71,7 @@ module.exports.factory = function( P, Https, Express, config, drivers, routes, e
 		items.forEach( function( i ) {
 			i.register( app );
 		} );
+
 	}
 
 };
