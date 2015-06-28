@@ -48,6 +48,7 @@ module.exports.factory = function( P, Https, Express, config, drivers, routes, e
 		for( var key in group ) {
 			if( group[key] && group[key].register && typeof group[key].register == 'function'
 			) {
+				if( ! group[key].priority ) group[key].priority = 0;
 				items.push( group[key] );
 			}
 		}
