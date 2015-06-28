@@ -20,6 +20,9 @@ module.exports.factory = function( fs ) { return {
 		requestCert: true,
 		rejectUnauthorized: true
 	},
+	cors: {
+		origin: /.*/
+	},
 	mongodb: {
 		servers: [ {
 			host: 'localhost',
