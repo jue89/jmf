@@ -19,9 +19,10 @@ module.exports.factory = function( P, schema, oh ) {
 		'modifier.$mul': { type: 'object' },
 		'modifier.$min': { type: 'object' },
 		'modifier.$max': { type: 'object' },
+		'modifier.$push': { type: 'object' },
 		'modifier.$currentDate': { type: 'object' }
 	} );
-	
+
 	return function( col, args ) {
 
 		// Arguments
@@ -57,4 +58,3 @@ module.exports.factory = function( P, schema, oh ) {
 	};
 
 };
-
