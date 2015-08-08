@@ -6,7 +6,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
-		'./modules/app/*.js',
+		'./modules/httpd/*.js',
 		{ implements: 'config', factory: function() { return {
 			listen: { port: 8000, host : '::' },
 			https: {
@@ -17,7 +17,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				rejectUnauthorized: true
 			}
 		}; } },
-		{ implements: 'app/routes:r1', factory: function() { return {
+		{ implements: 'httpd/routes:r1', factory: function() { return {
 			priority: 0,
 			register: function( app ) {
 				app.get( '/', function( req, res ) {
@@ -25,7 +25,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				} );
 			}
 		}; } },
-		{ implements: 'app/routes:r2', factory: function() { return {
+		{ implements: 'httpd/routes:r2', factory: function() { return {
 			priority: 1,
 			register: function( app ) {
 				app.get( '/', function( req, res ) {
@@ -33,7 +33,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				} );
 			}
 		}; } },
-		{ implements: 'app/drivers:d', factory: function() { return {
+		{ implements: 'httpd/drivers:d', factory: function() { return {
 			priority: 0,
 			register: function( app ) {
 				app.use( function( req, res, next ) {
@@ -42,7 +42,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				} );
 			}
 		}; } },
-		{ implements: 'app/errhandlers:e', factory: function() { return {
+		{ implements: 'httpd/errhandlers:e', factory: function() { return {
 			priority: 0,
 			register: function( app ) {
 				app.use( function( req, res ) {
@@ -64,7 +64,7 @@ describe( "API app", function() {
 
 	before( function( done ) {
 		// Start API
-		fireup( 'app' ).then( function( m ) {
+		fireup( 'httpd' ).then( function( m ) {
 			app = m;
 			return done();
 		} );

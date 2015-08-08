@@ -6,7 +6,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
-		'./modules/app/*.js',
+		'./modules/httpd/*.js',
 		'./modules/jsonapi/*.js',
 		'./modules/schema/*.js',
 		'./modules/objhelper/*.js',
@@ -20,7 +20,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				rejectUnauthorized: true
 			}
 		}; } },
-		{ implements: 'app/routes:schema', inject: ['schema'], factory: function(schema) { return {
+		{ implements: 'httpd/routes:schema', inject: ['schema'], factory: function(schema) { return {
 			register: function( app ) {
 				var test = schema( { 'id': { mandatory: true, type: 'number' } } );
 				app.post( '/schema', function( req, res, next ) {
@@ -43,7 +43,7 @@ describe( "API schema", function() {
 
 	before( function( done ) {
 		// Start API
-		fireup( 'app' ).then( function( m ) {
+		fireup( 'httpd' ).then( function( m ) {
 			app = m;
 			return done();
 		} );

@@ -3,15 +3,15 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app',
+	implements: 'httpd',
 	inject: [
 		'require(bluebird)',
 		'require(https)',
 		'require(express)',
 		'config',
-		'app/drivers:*',
-		'app/routes:*',
-		'app/errhandlers:*'
+		'httpd/drivers:*',
+		'httpd/routes:*',
+		'httpd/errhandlers:*'
 	]
 };
 

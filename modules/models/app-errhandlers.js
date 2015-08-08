@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/errhandlers:models',
+	implements: 'httpd/errhandlers:models',
 	inject: [ 'models/error' ],
 };
 
@@ -35,4 +35,3 @@ module.exports.factory = function( ModelsError ) { return {
 		} );
 	}
 }; };
-

@@ -1,7 +1,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/routes:discovery',
+	implements: 'httpd/routes:discovery',
 	inject: [ 'models', 'config' ],
 };
 

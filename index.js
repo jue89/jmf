@@ -17,4 +17,4 @@ var override = [];
 if( process.env.CONFIG ) override.push( "config:" + process.env.CONFIG );
 
 // And here we go !
-fireup( 'app', { use: override } );
+fireup( 'httpd', { use: override } );

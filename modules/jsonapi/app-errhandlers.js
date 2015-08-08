@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/errhandlers:jsonapi',
+	implements: 'httpd/errhandlers:jsonapi',
 	inject: [ ],
 };
 

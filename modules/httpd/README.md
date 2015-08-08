@@ -5,17 +5,13 @@ Module starting an HTTPS server and installing given driver, routes and error ha
 
 ## Interface
 
-Implementing ```app```: Returns handle to started HTTPS server.
+Implementing ```httpd```: Returns handle to started HTTPS server.
 
 Requires NodeJS modules  ```Bluebird``` ```Express``` ```Posix```
 
 Requires ```config```: Object with pattern:
 ``` Javascript
 {
-	app: {
-		user: String,             // Dropping privledges to this user
-		group: String             // Dropping privledges to this group
-	},
 	https: {
 		port: Number,             // Port number to listen on
 		ca: Buffer,               // Buffer containing CA certificate
@@ -25,7 +21,7 @@ Requires ```config```: Object with pattern:
 }
 ```
 
-Requires ```app/drivers:*``` ```app/routes:*``` ```app/errhandlers:*```: Object with pattern:
+Requires ```httpd/drivers:*``` ```httpd/routes:*``` ```httpd/errhandlers:*```: Object with pattern:
 ``` Javascript
 {
 	priority: Number,                 // Priority for ordering modules

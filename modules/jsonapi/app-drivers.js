@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/drivers:jsonapi',
+	implements: 'httpd/drivers:jsonapi',
 	inject: [ 'require(body-parser)' ],
 };
 
@@ -19,7 +19,7 @@ module.exports.factory = function( BodyParser) { return {
 			res.endJSON = function( obj ) {
 				// Query parameter 'pretty' will format the output to be more readable
 				var pretty = (this.req.query.pretty !== null) ? '  ' : null;
-				
+
 				// Pretty outputs has not Content-Type. Otherwise they wouldn't be displayed in the browser
 				if( ! pretty ) this.type('application/vnd.api+json');
 

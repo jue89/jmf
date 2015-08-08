@@ -6,7 +6,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
-		'./modules/app/*.js',
+		'./modules/httpd/*.js',
 		'./modules/jsonapi/*.js',
 		{ implements: 'config', factory: function() { return {
 			listen: { port: 8000, host : '::' },
@@ -18,7 +18,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 				rejectUnauthorized: true
 			}
 		}; } },
-		{ implements: 'app/routes:jsonapi', factory: function() { return {
+		{ implements: 'httpd/routes:jsonapi', factory: function() { return {
 			register: function( app ) {
 				app.get( '/simplelist', function( req, res ) {
 					res.endJSON( { id: 1 } );
@@ -44,7 +44,7 @@ describe( "API JSONAPI", function() {
 
 	before( function( done ) {
 		// Start API
-		fireup( 'app' ).then( function( m ) {
+		fireup( 'httpd' ).then( function( m ) {
 			app = m;
 			return done();
 		} );

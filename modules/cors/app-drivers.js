@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/drivers:cors',
+	implements: 'httpd/drivers:cors',
 	inject: [ 'require(cors)', 'config' ],
 };
 

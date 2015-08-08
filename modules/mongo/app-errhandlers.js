@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/errhandlers:mongo',
+	implements: 'httpd/errhandlers:mongo',
 	inject: [],
 };
 

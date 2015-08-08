@@ -1,7 +1,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/routes:models',
+	implements: 'httpd/routes:models',
 	inject: [ 'models' ],
 };
 

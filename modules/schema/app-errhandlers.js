@@ -3,7 +3,7 @@
 // Fire me up!
 
 module.exports = {
-	implements: 'app/errhandlers:schema',
+	implements: 'httpd/errhandlers:schema',
 	inject: [ 'schema/error' ],
 };
 
