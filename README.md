@@ -20,3 +20,121 @@ $ npm start
 ```
 
 Define some models and hooks.
+
+## Examples
+
+### discovery
+
+Listing the installed models.
+
+```
+> curl -k https://locahost:8000/_discover
+{
+  "models": [
+    "user"
+  ]
+}
+```
+
+### create
+
+```
+> curl -k -H "Content-Type: application/json" -X POST \
+> https://localhost:8000/users --data @- <<EOF 
+> {
+>   "users": {
+>     "name": "Max Mustermann",
+>     "email": "max@mustermann.tld",
+>     "admin": false
+>   }
+> }
+> EOF
+{
+  "name": "Max Mustermann",
+  "email": "max@mustermann.tld",
+  "admin": false,
+  "created_at": "2015-09-11T14:42:58.605Z",
+  "_id": "55f2e87276418f4d3c64d56e"
+}
+```
+
+### fetch
+
+```
+> curl -k https://localhost:8000/users
+{
+  "meta": {
+    "count": 1,
+    "limit": 50,
+    "page": 0
+  },
+  "users": [
+    {
+      "_id": "55f2e87276418f4d3c64d56e",
+      "name": "Max Mustermann",
+      "email": "max@mustermann.tld",
+      "admin": false,
+      "created_at": "2015-09-11T14:42:58.605Z"
+    }
+  ],
+  "links": {},
+  "linked": {}
+}
+```
+
+### fetch a single user
+
+```
+> curl -k https://localhost:8000/users/55f2e87276418f4d3c64d56e
+{
+  "users": {
+    "_id": "55f2e87276418f4d3c64d56e",
+    "name": "Max Mustermann",
+    "email": "max@mustermann.tld",
+    "admin": false,
+    "created_at": "2015-09-11T16:02:59.357Z"
+  },
+  "links": {},
+  "linked": {}
+}
+```
+
+### update
+
+```
+> curl -k -H "Content-Type: application/json" -X PUT \
+> https://localhost:8000/users/55f2e87276418f4d3c64d56e --data @- <<EOF
+> {
+>   "users": {
+>     "name": "Max Mustermann",
+>     "email": "max@mustermann.tld",
+>     "admin": true
+>   }
+> }
+> EOF
+{
+  "users": {
+    "_id": "55f2e87276418f4d3c64d56e",
+    "name": "Max Mustermann",
+    "email": "max@mustermann.tld",
+    "admin": true,
+    "created_at": "2015-09-11T15:35:47.971Z",
+    "updated_at": "2015-09-11T15:52:28.127Z"
+  }
+}
+```
+
+### delete
+
+The servers response is empty if the request was sucessful.
+
+```
+> curl -k -X DELETE https://localhost:8000/users/55f2fa1f7449c430405b3583 -i
+
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Vary: Origin
+Date: Fri, 11 Sep 2015 15:58:35 GMT
+Connection: keep-alive
+Content-Length: 0
+```
