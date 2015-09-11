@@ -57,7 +57,7 @@ Listing the installed models.
 > curl -k https://locahost:8000/_discover
 {
   "models": [
-    "user"
+    "users"
   ]
 }
 ```
