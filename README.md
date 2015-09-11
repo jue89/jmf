@@ -64,6 +64,8 @@ Listing the installed models.
 
 ### create
 
+Notice: The user object is not the toplevel object in the request.
+
 ```
 > curl -k -H "Content-Type: application/json" -X POST \
 > https://localhost:8000/users --data @- <<EOF 
