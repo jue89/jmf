@@ -136,8 +136,6 @@ Promote Max Mustermann as admin.
 > https://localhost:8000/users/55f2e87276418f4d3c64d56e --data @- <<EOF
 > {
 >   "users": {
->     "name": "Max Mustermann",
->     "email": "max@mustermann.tld",
 >     "admin": true
 >   }
 > }
