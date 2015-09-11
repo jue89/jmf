@@ -21,7 +21,33 @@ $ npm start
 
 Define some models and hooks.
 
-## Examples
+
+## Example
+
+Here we have a simple user model to demonstrate how  *JMF* works.
+
+``` javascript
+// Fire me up! 
+
+module.exports = {
+	implements: 'model:users',
+	inject: [ 'mongo/objectid' ]
+}
+
+module.exports.factory = function (oid) {
+	return {
+		idGenerator: oid,
+		schema: {
+			_id: { mandatory: true, type: 'objectid' },
+			name: { mandatory: true, type: 'string' },
+			email: { mandatory: true, type: 'string' },
+			admin: { type: 'boolean' },
+		},
+		index: [ 'email' ]
+	};
+}
+```
+
 
 ### discovery
 
@@ -100,6 +126,8 @@ Listing the installed models.
 ```
 
 ### update
+
+Promote Max Mustermann as admin.
 
 ```
 > curl -k -H "Content-Type: application/json" -X PUT \
