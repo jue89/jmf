@@ -66,6 +66,8 @@ Listing the installed models.
 
 Notice: The user object is not the toplevel object in the request.
 
+**NOTE:** Content-Type is important!
+
 ```
 > curl -k -H "Content-Type: application/json" -X POST \
 > https://localhost:8000/users --data @- <<EOF 
@@ -130,6 +132,8 @@ Notice: The user object is not the toplevel object in the request.
 ### update
 
 Promote Max Mustermann as admin.
+
+**NOTE:** Content-Type is important!
 
 ```
 > curl -k -H "Content-Type: application/json" -X PUT \
