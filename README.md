@@ -65,8 +65,8 @@ Listing the installed models.
 ### create
 
 **NOTES:**
-Content-Type is important!
-The user object is not the toplevel object in the request.
+* Content-Type is important!
+* The user object is not the toplevel object in the request.
 
 ```
 > curl -k -H "Content-Type: application/json" -X POST \
