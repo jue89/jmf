@@ -27,6 +27,10 @@ module.exports.factory = function( ModelsError ) { return {
 				case 'drop-fail':
 					code = 500; // Internal Server Error
 					break;
+                                case 'action-prohibited':
+                                        // TODO: rfc2616 - 14.7 Allow
+                                        code = 405;
+                                        break;
 				default:
 					code = 400;
 			}
