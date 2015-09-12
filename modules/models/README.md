@@ -31,3 +31,35 @@ Requires ```model:*```: Object defining model:
   idGenerator: Function                       // ID generator function (optional)
 }
 ```
+
+### Index Examples
+
+**Simple:**
+``` javascript
+...
+index: [ 'email' ]
+...
+```
+
+**With Options:**
+``` javascript
+...
+index: [ [ 'email', { unique: true } ] ]
+...
+```
+
+**Compound:**
+``` javascript
+...
+index: [ [ ['prename', 'surname'], { unique: true } ] ]
+...
+```
+
+**More than one index:**
+``` javascript
+...
+index: [ [ ['prename', 'surname'], { unique: true } ], [ 'email', { unique: true } ], 'phone' ]
+...
+```
+
+
