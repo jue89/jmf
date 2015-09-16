@@ -34,6 +34,8 @@ Requires ```model:*```: Object defining model:
 
 ### Index Examples
 
+**NOTE:** Since *JMF* calls the ``` ensureIndex( ... )``` function of the mongodb driver, it's only ensured that the index is existing. If you modify the index, you have to remove the index **manually** in mongo and the next time *JMF* is started the index is built correctly.
+
 **Simple:**
 ``` javascript
 ...
