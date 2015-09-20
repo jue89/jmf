@@ -57,14 +57,16 @@ Listing the installed models.
 > curl -k https://locahost:8000/_discover
 {
   "models": [
-    "user"
+    "users"
   ]
 }
 ```
 
 ### create
 
-Notice: The user object is not the toplevel object in the request.
+**NOTES:**
+* Content-Type is important!
+* The user object is not the toplevel object in the request.
 
 ```
 > curl -k -H "Content-Type: application/json" -X POST \
@@ -131,13 +133,13 @@ Notice: The user object is not the toplevel object in the request.
 
 Promote Max Mustermann as admin.
 
+**NOTE:** Content-Type is important!
+
 ```
 > curl -k -H "Content-Type: application/json" -X PUT \
 > https://localhost:8000/users/55f2e87276418f4d3c64d56e --data @- <<EOF
 > {
 >   "users": {
->     "name": "Max Mustermann",
->     "email": "max@mustermann.tld",
 >     "admin": true
 >   }
 > }

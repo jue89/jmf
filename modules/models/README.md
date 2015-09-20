@@ -31,3 +31,37 @@ Requires ```model:*```: Object defining model:
   idGenerator: Function                       // ID generator function (optional)
 }
 ```
+
+### Index Examples
+
+**NOTE:** Since *JMF* calls the ``` ensureIndex( ... )``` function of the mongodb driver, it's only ensured that the index is existing. If you modify the index, you have to remove the index **manually** in mongo and the next time *JMF* is started the index is built correctly.
+
+**Simple:**
+``` javascript
+...
+index: [ 'email' ]
+...
+```
+
+**With Options:**
+``` javascript
+...
+index: [ [ 'email', { unique: true } ] ]
+...
+```
+
+**Compound:**
+``` javascript
+...
+index: [ [ ['prename', 'surname'], { unique: true } ] ]
+...
+```
+
+**More than one index:**
+``` javascript
+...
+index: [ [ ['prename', 'surname'], { unique: true } ], [ 'email', { unique: true } ], 'phone' ]
+...
+```
+
+
