@@ -90,6 +90,9 @@ module.exports.factory = function() {
 		// Regular expression for testing names againts array name pattern
 		var arrayPattern = /^([^\[]*)\[([0-9]+)\]$/;
 
+		// Some helper function
+		var name, test, arrayName, arrayItem;
+
 		// Walk through flattned object
 		for( var o in obj ) {
 
@@ -98,14 +101,14 @@ module.exports.factory = function() {
 			var pointer = ret;
 			for( var i = 0; i < path.length - 1; i++ ) {
 
-				var name = path[i];
-				var test = arrayPattern.exec( name );
+				name = path[i];
+				test = arrayPattern.exec( name );
 
 				if( test !== null ) {
 
 					// Field name is an array name
-					var arrayName = test[1];
-					var arrayItem = test[2];
+					arrayName = test[1];
+					arrayItem = test[2];
 
 					// Create array if it does not exist
 					if( pointer[ arrayName ] === undefined ) pointer[ arrayName ] = [];
@@ -127,13 +130,13 @@ module.exports.factory = function() {
 			}
 
 			// At the end of the path finally append the object
-			var name = path[ i ];
-			var test = arrayPattern.exec( name );
+			name = path[ i ];
+			test = arrayPattern.exec( name );
 			if( test !== null ) {
 
 				// It's an array ...
-				var arrayName = test[1];
-				var arrayItem = test[2];
+				arrayName = test[1];
+				arrayItem = test[2];
 
 				// Create array if it does not exist
 				if( pointer[ arrayName ] === undefined ) pointer[ arrayName ] = [];

@@ -41,17 +41,17 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 					if( schema[i].mandatory ) {
 
 						// Maybe it's an array definition and hidden due to the different keys
-						var found = 0;
+						var occurences = 0;
 						for( var t in test ) {
 
 							// Yep, we found it \o/
-							if( t.replace( arrayPattern, '[]' ) == i ) found++;
+							if( t.replace( arrayPattern, '[]' ) == i ) occurences++;
 
 						}
 
 						// TODO: Minimum number of occurences?
 
-						if( found == 0 ) return reject( new SchemaError(
+						if( occurences === 0 ) return reject( new SchemaError(
 							'missing-field',
 							"Field " + i + " is missing."
 						) );
