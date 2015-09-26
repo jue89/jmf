@@ -152,18 +152,7 @@ describe( "Module schema", function() {
 			'field': { type: 'string' }
 		} );
 
-		test( { 'field': ['test'] } ).catch( function( e ) {
-			e.type.should.eql( 'wrong-type' );
-			done();
-		} );
-	} );
-
-	it( "should complain wrong type (array)", function( done ) {
-		var test = schema( {
-			'field': { type: 'array' }
-		} );
-
-		test( { 'field': true } ).catch( function( e ) {
+		test( { 'field': 0 } ).catch( function( e ) {
 			e.type.should.eql( 'wrong-type' );
 			done();
 		} );
@@ -195,16 +184,6 @@ describe( "Module schema", function() {
 		} );
 
 		test( { 'field': 'test' } ).then( function( ) {
-			done();
-		} );
-	} );
-
-	it( "should accept right type (array)", function( done ) {
-		var test = schema( {
-			'field': { type: 'array' }
-		} );
-
-		test( { 'field': [true] } ).then( function( ) {
 			done();
 		} );
 	} );
@@ -251,23 +230,54 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should accept right array item type (boolean)", function( done ) {
+		var test = schema( {
+			'field[]': { type: 'boolean' }
+		} );
+
+		test( { 'field': [true] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should complain wrong array item type (boolean)", function( done ) {
+		var test = schema( {
+			'field[]': { type: 'boolean' }
+		} );
+
+		test( { 'field': [0] } ).catch( function( e ) {
+			e.type.should.eql( 'wrong-type' );
+			done();
+		} );
+	} );
+
+	it( "should complain pattern mismatch within arrays", function( done ) {
+		var test = schema( {
+			'array[].field': { type: 'color' }
+		} );
+
+		test( { 'array': [ {'field': '#aa994g' } ] } ).catch( function( e ) {
+			e.type.should.eql( 'wrong-format' );
+			done();
+		} );
+	} );
+
+	it( "should accept pattern match within arrays", function( done ) {
+		var test = schema( {
+			'array[].field': { type: 'color' }
+		} );
+
+		test( { 'array': [ {'field': '#aa994f' } ] } ).then( function( ) {
+			done();
+		} );
+	} );
+
 	it( "should complain exceeded max length (string)", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', max: 3 }
 		} );
 
 		test( { 'field': '1234' } ).catch( function( e ) {
-			e.type.should.eql( 'max-length-exceeded' );
-			done();
-		} );
-	} );
-
-	it( "should complain exceeded max length (array)", function( done ) {
-		var test = schema( {
-			'field': { type: 'array', max: 3 }
-		} );
-
-		test( { 'field': ['1','2','3','4'] } ).catch( function( e ) {
 			e.type.should.eql( 'max-length-exceeded' );
 			done();
 		} );
@@ -283,33 +293,12 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should accept right max length (array)", function( done ) {
-		var test = schema( {
-			'field': { type: 'array', max: 3 }
-		} );
-
-		test( { 'field': ['1','2','3'] } ).then( function( ) {
-			done();
-		} );
-	} );
-
 	it( "should complain dropping below min length (string)", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', min: 3 }
 		} );
 
 		test( { 'field': '12' } ).catch( function( e ) {
-			e.type.should.eql( 'min-length-dropped-below' );
-			done();
-		} );
-	} );
-
-	it( "should complain dropping below min length (array)", function( done ) {
-		var test = schema( {
-			'field': { type: 'array', min: 2 }
-		} );
-
-		test( { 'field': ['12'] } ).catch( function( e ) {
 			e.type.should.eql( 'min-length-dropped-below' );
 			done();
 		} );

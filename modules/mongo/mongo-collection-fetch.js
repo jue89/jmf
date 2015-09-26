@@ -15,12 +15,12 @@ module.exports.factory = function( P, schema ) {
 		'limit': { type: 'number', default: 0, min: 0 },
 		'page': { type: 'number', default: 0, min: 0 },
 		'sort': { type: 'string', default: '+_id' },
-		'fields': { type: 'array', default: [] }
+		'fields[]': { type: 'string' }
 	} );
 
 	// The exposed function
 	return function( col, args ) {
-		
+
 		// Arguments
 		var query = args[0];
 
@@ -48,7 +48,7 @@ module.exports.factory = function( P, schema ) {
 
 			// Fields
 			var fields = {};
-			query.fields.forEach( function( f ) {
+			if( query.fields ) query.fields.forEach( function( f ) {
 				fields[f] = 1;
 			} );
 			query.fields = fields;
@@ -75,8 +75,7 @@ module.exports.factory = function( P, schema ) {
 			limit: query.limit,
 			page: query.page
 		} ); } );
-			
+
 	};
 
 };
-

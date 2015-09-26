@@ -8,14 +8,16 @@ module.exports = {
 };
 
 module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
-	
+
+	// Array pattern matcher
+	var arrayPattern = /\[[0-9]+\]/g;
 
 	// Prepare external pattern
 	var pattern = {};
 	for( var p in extPattern ) oh.append( pattern, extPattern[p] );
 
 
-	// Factory 
+	// Factory
 	return function( schema, ignoreUndefinedFields ) {
 
 		// Resolve external patterns
@@ -34,12 +36,28 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 			// Check for missing fields that are mandatory
 			for( var i in schema ) {
 				if( test[i] === undefined ) {
+
+					// Field is missing. Is it mandatory?
 					if( schema[i].mandatory ) {
-						return reject( new SchemaError(
+
+						// Maybe it's an array definition and hidden due to the different keys
+						var occurences = 0;
+						for( var t in test ) {
+
+							// Yep, we found it \o/
+							if( t.replace( arrayPattern, '[]' ) == i ) occurences++;
+
+						}
+
+						// TODO: Minimum number of occurences?
+
+						if( occurences === 0 ) return reject( new SchemaError(
 							'missing-field',
 							"Field " + i + " is missing."
 						) );
+
 					} else if( schema[i].default !== undefined ) {
+
 						if( schema[i].type == 'object' ) {
 							// If type is object it must be handled a little bit different ...
 
@@ -63,20 +81,23 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 									test[ i + '.' + key ] = defaultObj[ key ];
 								}
 							}
-						} else if( schema[i].type == 'array' ) {
-							// Copy arrays
-							test[i] = schema[i].default.slice();
 						} else {
 							test[i] = schema[i].default;
 						}
+
 					}
 				}
 			}
-			
+
 			// Check for undefined or check pattern
 			for( i in test ) {
+
+				// If item iterater contains array pattern, create an wildcard for schema matching
+				var iSchema = i.replace( arrayPattern, '[]' );
+
 				// Check whether field is defined in schema
-				if( ! schema[i] ) {
+				if( ! schema[iSchema] ) {
+
 					// Let undefined fields pass if they should be ignored
 					if( ignoreUndefinedFields ) continue;
 
@@ -107,24 +128,24 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 				var type = oh.gettype( test[i] );
 
 				// Check for right data type
-				if( schema[i].type && type != schema[i].type ) {
+				if( schema[iSchema].type && type != schema[iSchema].type ) {
 					return reject( new SchemaError(
 						'wrong-type',
-						"Field " + i + " has wrong type! " + schema[i].type + " expected."
+						"Field " + i + " has wrong type! " + schema[iSchema].type + " expected."
 					) );
 				}
 
 				// Check for value
-				if( type == 'number' && schema[i].min !== undefined ) {
-					if( test[i] < schema[i].min ) {
+				if( type == 'number' && schema[iSchema].min !== undefined ) {
+					if( test[i] < schema[iSchema].min ) {
 						return reject( new SchemaError(
 							'min-value-dropped-below',
 							"Field " + i + " is too small!"
 						) );
 					}
 				}
-				if( type == 'number' && schema[i].max !== undefined ) {
-					if( test[i] > schema[i].max ) {
+				if( type == 'number' && schema[iSchema].max !== undefined ) {
+					if( test[i] > schema[iSchema].max ) {
 						return reject( new SchemaError(
 							'max-value-exceeded',
 							"Field " + i + " is too large!"
@@ -133,18 +154,16 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 				}
 
 				// Check for length
-				if( ( type == 'string' || type == 'array') &&
-				    schema[i].min !== undefined ) {
-					if( test[i].length < schema[i].min ) {
+				if( type == 'string' && schema[iSchema].min !== undefined ) {
+					if( test[i].length < schema[iSchema].min ) {
 						return reject( new SchemaError(
 							'min-length-dropped-below',
 							"Field " + i + " is too short!"
 						) );
 					}
 				}
-				if( ( type == 'string' || type == 'array') &&
-				    schema[i].max !== undefined ) {
-					if( test[i].length > schema[i].max ) {
+				if( type == 'string' && schema[iSchema].max !== undefined ) {
+					if( test[i].length > schema[iSchema].max ) {
 						return reject( new SchemaError(
 							'max-length-exceeded',
 							"Field " + i + " is too long!"
@@ -153,12 +172,12 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 				}
 
 				// Check for pattern
-				if( type == 'string' && schema[i].pattern ) {
-					if( oh.gettype( schema[i].pattern ) == "string" ) {
-						schema[i].pattern = new RegExp( schema[i].pattern );
+				if( type == 'string' && schema[iSchema].pattern ) {
+					if( oh.gettype( schema[iSchema].pattern ) == "string" ) {
+						schema[iSchema].pattern = new RegExp( schema[iSchema].pattern );
 					}
-					
-					if( ! schema[i].pattern.test( test[i] ) ) {
+
+					if( ! schema[iSchema].pattern.test( test[i] ) ) {
 						return reject( new SchemaError(
 							'wrong-format',
 							"Field " + i + " has wrong format!"
@@ -168,7 +187,7 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 			}
 
 			return resolve( oh.pack( test ) );
-			
+
 		} ); };
 	};
 };

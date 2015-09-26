@@ -46,14 +46,22 @@ module.exports.factory = function( P, objhelper, methodFactory, resourceDefs, mo
 				resources[ foreign ].rel1[ s ] = resource.name;
 
 				// Overwirte schema
-				f = resource.schema[s] = {};
-				objhelper.append( f, resources[ foreign ].schema._id );
 				if( multi ) {
-					f.type = 'array';
-					if( typeof mandatory == 'number' ) f.min = mandatory;
-					else if( mandatory ) f.min = 1;
+
+					// Change it to an array object
+					delete resource.schema[s];
+					resource.schema[s+'[]'] = {};
+					objhelper.append( resource.schema[s+'[]'], resources[ foreign ].schema._id );
+					resource.schema[s+'[]'].mandatory = mandatory ? true : false;
+
+				} else {
+
+					// Copy foreign schema
+					resource.schema[s] = {};
+					objhelper.append( resource.schema[s], resources[ foreign ].schema._id );
+					resource.schema[s].mandatory = mandatory ? true : false;
+
 				}
-				f.mandatory = mandatory ? true : false;
 			}
 		}
 
