@@ -22,7 +22,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 		'req.page': { type: 'number', default: 0 },
 		'req.sort': { type: 'string', default: '+_id' },
 		'req.fields': { type: 'object', default: {} },
-		'req.include': { type: 'array', default: [] }
+		'req.include[]': { type: 'string' }
 	}, true );
 
 
@@ -52,7 +52,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 			.then( function( query ) {
 
 				// Check all requested includes
-				if( query.req.include.length > 0 ) {
+				if( query.req.include && query.req.include.length > 0 ) {
 					var include = query.req.include;
 					for( var i in include ) {
 						var inc = include[ i ];
@@ -82,7 +82,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 					'limit': query.req.limit,
 					'page': query.req.page,
 					'sort': query.req.sort,
-					'fields': query.req.fields[ name ]
+					'fields': query.req.fields[ name ] || []
 				} ).then( function( res ) {
 
 					// Filter all data items
@@ -116,7 +116,7 @@ module.exports.factory = function( P, ModelsError, getHooks, schema ) { return f
 					query.res.linked = {};
 
 					var queryStack = {};
-					query.req.include.forEach( function( i ) {
+					if( query.req.include ) query.req.include.forEach( function( i ) {
 
 						// Set values for queries
 						var model, localField, remoteField;
