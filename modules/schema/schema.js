@@ -9,6 +9,8 @@ module.exports = {
 
 module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 
+	// Array pattern matcher
+	var arrayPattern = /\[[0-9]+\]/g;
 
 	// Prepare external pattern
 	var pattern = {};
@@ -34,12 +36,28 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 			// Check for missing fields that are mandatory
 			for( var i in schema ) {
 				if( test[i] === undefined ) {
+
+					// Field is missing. Is it mandatory?
 					if( schema[i].mandatory ) {
-						return reject( new SchemaError(
+
+						// Maybe it's an array definition and hidden due to the different keys
+						var found = 0;
+						for( var t in test ) {
+
+							// Yep, we found it \o/
+							if( t.replace( arrayPattern, '[]' ) == i ) found++;
+
+						}
+
+						// TODO: Minimum number of occurences?
+
+						if( found == 0 ) return reject( new SchemaError(
 							'missing-field',
 							"Field " + i + " is missing."
 						) );
+
 					} else if( schema[i].default !== undefined ) {
+
 						if( schema[i].type == 'object' ) {
 							// If type is object it must be handled a little bit different ...
 
@@ -66,12 +84,10 @@ module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
 						} else {
 							test[i] = schema[i].default;
 						}
+
 					}
 				}
 			}
-
-			// Array pattern matcher
-			var arrayPattern = /\[[0-9]+\]/g;
 
 			// Check for undefined or check pattern
 			for( i in test ) {
