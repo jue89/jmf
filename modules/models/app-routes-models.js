@@ -88,6 +88,9 @@ module.exports.factory = function( models ) {
 		// Add query
 		info.query = req.query;
 
+		// Is the client authorized?
+		info.authorized = req.client.authorized;
+
 		return info;
 	}
 
