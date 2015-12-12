@@ -347,4 +347,75 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should accept right the type of array items", function( done ) {
+		var test = schema( {
+			'field': { type: 'array' },
+			'field[]': { type: 'string' }
+		} );
+
+		test( { 'field': [ 'foo', 'bar', 'soup'] } ).then( function ( ) {
+			done();
+		} );
+	} );
+
+	it( "should complain about the type of array items", function( done ) {
+		var test = schema( {
+			'field': { type: 'array' },
+			'field[]': { type: 'string' }
+		} );
+
+		test( { 'field': [ 'foo', 'bar', 'soup', 42] } ).catch( function ( e ) {
+			e.type.should.eql( 'wrong-type' );
+			done();
+		} );
+	} );
+	
+	it( "should accept empty arrays also when they are marked as mandatory", function( done ) {
+		var test = schema( {
+			'field': { type: 'array', mandatory: true },
+			'field[].foo': { type: 'string' }
+		} );
+
+		test( { 'field': [] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should apply the mandatory to items of the array", function( done ) {
+		var test = schema( {
+			'box': { type: 'array' },
+			'box[].field': { mandatory: true }
+		} );
+
+		// This one should fail, because there is an item in the array
+		test({ 'box': [{}] }).catch( function( e ) {
+			e.type.should.eql( 'missing-field' );
+			done();
+		} );
+	} );
+
+	it( "should let empty arrays pass the mandatory checks of the items", function( done ) {
+		var test = schema( {
+			'box': { type: 'array' },
+			'box[].field': { mandatory: true }
+		} );
+
+		// Empty arrays should pass
+		test( { 'box': [] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should implicitly set the array type", function( done ) {
+		var test = schema( {
+			'box[]': { type: 'number' }
+		} );
+
+		// This should fail, because the box-field is a number not an array
+		test( { 'box': 42 } ).catch( function( e ) {
+			e.type.should.eql( 'wrong-type' );
+			done();
+		} );
+	} );
+	
 } );
