@@ -53,6 +53,10 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should complain about default/mandatory conflics", function( done ) {
+		// TODO
+	} );
+
 	it( "should complain missing field", function( done ) {
 		var test = schema( {
 			'field': { mandatory: true }
