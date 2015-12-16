@@ -7,7 +7,7 @@ module.exports = {
 	inject: [ 'require(bluebird)', 'hook:*' ]
 };
 
-module.exports.factory = function( P, hooks, module, actions ) {
+module.exports.factory = function( P, hooks ) {
 
 	return getHooks;
 
