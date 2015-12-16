@@ -44,3 +44,35 @@ module.exports.factory = function( getHooks ) {
 	} );
 }
 ```
+
+**Using the chain helper directly:**
+
+``` Javascript
+module.exports = {
+	implements: 'barfoo',
+	inject: [ 'chain' ]
+}
+
+module.exports.factory = function( chain ) {
+	var funcs = [ {
+		action: function( elem ) {
+			elem.field += 1;
+			return elem;  // the function returns the item, so the next can reuse it
+		}
+		// this function has no priority and gets default priority 0
+	}, {
+		action: function( elem ) {
+			action.field = 0;
+			return elem;
+		},
+		priority: -1  // this function should be executed before the first one
+	} ];
+
+	var c = chain( funcs );
+
+	// execute the chain
+	c( { field: 42 } ).then( function ( elem ) {
+		console.log( elem.field ); // prints "1" on the console
+	} );
+}
+```
