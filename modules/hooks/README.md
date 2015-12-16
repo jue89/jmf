@@ -22,3 +22,25 @@ Requires ```hook:*```: Object with pattern:
 	...
 }
 ```
+
+## Examples
+
+**Calling hooks:**
+
+``` Javascript
+module.exports = {
+	implements: 'foobar',
+	inject: [ 'hooks' ]
+};
+
+module.exports.factory = function( getHooks ) {
+
+	// receive the actions 'pre' and 'post' for the 'global'-module
+	var globalHooks = getHooks('global', ['pre', 'post']);
+
+	// calling the hook chain (look: it's a promise)
+	globalHooks.pre(args).then( function ( args ) {
+		// the hooks are passed and the modified args are passed in here
+	} );
+}
+```
