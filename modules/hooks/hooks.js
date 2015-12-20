@@ -18,11 +18,11 @@ module.exports.factory = function( P, chain, hooks ) {
 		// Walk over all actions
 		for( var a in actions ) {
 			var action = actions[a];
-			
+
 			var funcs = [];
 			for( var h in hooks ) {
 				var hook = hooks[h];
-				
+
 				// Search for registered hooks
 				if( hook[module] && hook[module][action] && hook[module][action].action ) {
 					var i = hook[module][action];
