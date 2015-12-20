@@ -42,13 +42,25 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should set missing sub-field to default", function( done ) {
+	it( "should apply default to array items", function( done ) {
 		var test = schema( {
-			'field.subfield': { default: 'test' }
+			'arr[].foo': { default: 'bar' }
+		} );
+
+		test( { arr: [ {}, { foo: 'baz' } ] } ).then( function ( e ) {
+			e.arr[0].foo.should.eql( 'bar' );
+			e.arr[1].foo.should.eql( 'baz' );
+			done();
+		} );
+	} );
+
+	it( "should set missing sub-sub-field to default", function( done ) {
+		var test = schema( {
+			'field.sub.subfield': { default: 'test' }
 		} );
 
 		test( {} ).then( function( e ) {
-			e.field.subfield.should.eql( 'test' );
+			e.field.sub.subfield.should.eql( 'test' );
 			done();
 		} );
 	} );
