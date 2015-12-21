@@ -112,11 +112,64 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should not complain about defined field", function( done ) {
+		var test = schema( {
+			field: {}
+		} );
+
+		test( { 'field' : 'test' } ).then( function() {
+			done();
+		} );
+	} );
+
 	it( "should complain undefined field", function( done ) {
 		var test = schema( {
 		} );
 
 		test( { 'field' : 'test' } ).catch( function( e ) {
+			e.type.should.eql( 'illegal-field' );
+			done();
+		} );
+	} );
+
+	it( "should not complain about defined array field (implicit)", function( done ) {
+		var test = schema( {
+			'arr[]': {}
+		} );
+
+		test( { 'arr': [ 23, 42, 1337 ] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should not complain about defined array field (explicit)", function( done ) {
+		var test = schema( {
+			'arr': {}
+		} );
+
+		test( { 'arr': [ 23, 42, 1337 ] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+
+	it( "should complain about undefined fields in array", function( done ) {
+		var test = schema( {
+			'arr[]': {}
+		} );
+
+		test( { 'arr': [{ foo: 'baz' }] } ).catch( function( e ) {
+			e.type.should.eql( 'illegal-field' );
+			done();
+		} );
+	} );
+
+	it( "should complain about undefined sub-sub-fields", function( done ) {
+		var test = schema( {
+			testing: {}
+		} );
+
+		test( { testing: { a: { subsubfield: {} } } } ).catch( function( e ) {
 			e.type.should.eql( 'illegal-field' );
 			done();
 		} );
@@ -422,16 +475,4 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should implicitly set the array type", function( done ) {
-		var test = schema( {
-			'box[]': { type: 'number' }
-		} );
-
-		// This should fail, because the box-field is a number not an array
-		test( { 'box': 42 } ).catch( function( e ) {
-			e.type.should.eql( 'wrong-type' );
-			done();
-		} );
-	} );
-	
 } );
