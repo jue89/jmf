@@ -6,6 +6,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
+		'./modules/hooks/*.js',
 		'./modules/httpd/*.js',
 		'./modules/jsonapi/*.js',
 		'./modules/schema/*.js',
