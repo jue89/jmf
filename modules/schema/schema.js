@@ -41,7 +41,7 @@ module.exports.factory = function( P, chain, validators ) {
 					// write back the results
 					promise = promise.then( function( res ) {
 						// create the item if needed
-						if( !item && res !== undefined ) item = {};
+						if( item === undefined && res !== undefined ) item = {};
 
 						item[head] = res;
 						return item;
