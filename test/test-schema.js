@@ -417,7 +417,7 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should accept right the type of array items", function( done ) {
+	it( "should accept the right type of array items", function( done ) {
 		var test = schema( {
 			'field': { type: 'array' },
 			'field[]': { type: 'string' }
