@@ -279,6 +279,16 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should not complain about the type of undefined fields", function( done ) {
+		var test = schema( {
+			'field': { type: 'string' }
+		} );
+
+		test( {} ).then( function( ) {
+			done();
+		} );
+	} );
+
 	it( "should complain wrong pattern", function( done ) {
 		var test = schema( {
 			'field': { type: 'string', pattern: '^#[0-9a-f]{6}$' }
