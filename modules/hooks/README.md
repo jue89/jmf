@@ -65,7 +65,8 @@ module.exports.factory = function( chain ) {
 			action.field = 0;
 			return elem;
 		},
-		priority: -1  // this function should be executed before the first one
+		priority: 1  // this function should be executed before the first one, since
+		             // it has a higher priority
 	} ];
 
 	var c = chain( funcs );
