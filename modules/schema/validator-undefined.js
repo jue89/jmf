@@ -35,14 +35,14 @@ module.exports.factory = function( P, SchemaError ) {
 			}
 
 			// passed hierarchy down to atomic element
-			if( typeof elem !== 'object' ) return true;
+			if( typeof elem !== 'object' ) return P.resolve( true );
 
 			// check for a wildcard declaration
 			if( hasPath( head, false ) &&
 				definition[head].type === 'object' &&
 				!( elem instanceof Array ) ) {
 				// when a field type is defined as 'object', all subfields are allowed
-				return true;
+				return P.resolve( true );
 			}
 
 			var newHead = f => head + ( elem instanceof Array ? '[]' : dot + f );

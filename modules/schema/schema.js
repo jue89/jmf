@@ -29,7 +29,7 @@ module.exports.factory = function( P, chain, validators ) {
 						var h = head.slice( 0, -2 );
 
 						if( !( item[h] instanceof Array ) )
-							return item;
+							return P.resolve( item );
 
 						promise = P.map( item[h], walkDeeper );
 					} else if( item ) {
