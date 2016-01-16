@@ -47,6 +47,10 @@ module.exports.factory = function( P, chain, validators ) {
 							item[head] = res;
 						}
 
+						// delete the result from item if necessary
+						if( res === undefined ) {
+							delete item[head];
+						}
 
 						return item;
 					} );
