@@ -26,9 +26,8 @@ module.exports.factory = function( P, oh, SchemaError, extPattern ) {
 					var type = oh.gettype( field );
 					var expected = s.def.type;
 
-					// TODO: date
 					// other types are matched by patterns
-					if( ['string', 'number', 'array', 'object', 'boolean'].indexOf( expected ) == -1 )
+					if( ['date', 'string', 'number', 'array', 'object', 'boolean'].indexOf( expected ) == -1 )
 						expected = 'string';
 
 					if( type != expected ) {
