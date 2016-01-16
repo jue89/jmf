@@ -10,20 +10,21 @@ module.exports = {
 module.exports.factory = function( P, SchemaError ) {
 	return function( schema ) {
 		var c = [];
-		for( var s of schema.selectors ) {
+
+		schema.selectors.forEach( function( s ) {
 			if( s.def.default === undefined )
-				continue;
+				return;
 
 			c.push( {
 				priority: 90,
-				action: elem => s.select( elem, function( field ) {
+				action: s.select( function( field ) {
 					if( field === undefined ) {
 						return s.def.default;
 					}
 					return field;
 				} )
 			} );
-		}
+		} );
 
 		return c;
 	};

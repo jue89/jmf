@@ -12,7 +12,7 @@ module.exports.factory = function( P, chain, validators ) {
 	return function( schema, ignoreUndefinedFields ) {
 
 		function generateSelector( path ) {
-			function select( elem, fun ) {
+			function select( fun ) {
 				var walk = function( tail ) { return function( item ) {
 					// execute fun, if you are at a leaf
 					if( tail.length === 0 ) {
@@ -41,16 +41,20 @@ module.exports.factory = function( P, chain, validators ) {
 					// write back the results
 					promise = promise.then( function( res ) {
 						// create the item if needed
-						if( item === undefined && res !== undefined ) item = {};
+						if( res !== undefined ) {
+							if( item === undefined ) item = {};
 
-						item[head] = res;
+							item[head] = res;
+						}
+
+
 						return item;
 					} );
 
 					return promise;
 				}; };
 
-				return walk( path.split('.') )( elem );
+				return walk( path.split('.') );
 			}
 
 			return {
@@ -68,6 +72,7 @@ module.exports.factory = function( P, chain, validators ) {
 		};
 
 		var c = [];
+
 		for( var v in validators ) {
 			var validator = validators[v];
 			c = c.concat( validator(s) );

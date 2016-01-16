@@ -10,23 +10,27 @@ module.exports = {
 module.exports.factory = function( P, SchemaError ) {
 	return function( schema ) {
 		var c = [];
-		for( var s of schema.selectors ) {
+
+		schema.selectors.forEach( function( s ) {
+
 			if( !s.def.mandatory )
-				continue;
+				return;
 
 			c.push( {
 				priority: 100,
-				action: elem => s.select( elem, function( field ) {
+				action: s.select( function( field ) {
 					if( field === undefined ) {
 						return P.reject( new SchemaError(
 							'missing-field',
 							'Field ' + s.path + ' is missing.'
 						) );
 					}
+
 					return field;
 				} )
 			} );
-		}
+
+		} );
 
 		return c;
 	};

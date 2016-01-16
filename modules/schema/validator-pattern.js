@@ -15,14 +15,15 @@ module.exports.factory = function( P, oh, SchemaError, extPattern ) {
 
 	return function( schema ) {
 		var c = [];
-		for( var s of schema.selectors ) {
+
+		schema.selectors.forEach( function( s ) {
 			if( s.def.pattern === undefined && !s.def.type && !( s.def.type in patterns ) )
-				continue;
+				return;
 
 			c.push( {
 				priority: 50,
-				action: elem => s.select( elem, function( field ) {
-					// skip it is not a string
+				action: s.select( function( field ) {
+					// skip if it is not a string
 					if( oh.gettype( field ) !== 'string' )
 						return field;
 
@@ -44,7 +45,7 @@ module.exports.factory = function( P, oh, SchemaError, extPattern ) {
 				} )
 
 			} );
-		}
+		} );
 
 		return c;
 	};

@@ -10,13 +10,17 @@ module.exports = {
 module.exports.factory = function( P, oh, SchemaError ) {
 	return function( schema ) {
 		var c = [];
-		for( var s of schema.selectors ) {
+
+		schema.selectors.forEach( function( s ) {
 			var min = s.def.min;
 			var max = s.def.max;
 
+			if( !min && !max )
+				return;
+
 			c.push( {
 				priority: 80,
-				action: elem => s.select( elem, function( field ) {
+				action: s.select( function( field ) {
 					var type = oh.gettype( field );
 					var val;
 
@@ -50,7 +54,8 @@ module.exports.factory = function( P, oh, SchemaError ) {
 							return P.reject( new SchemaError(
 							    'max-length-exceeded',
 							    "Field " + field.selector + " is too long!"
-							) );} else {
+							) );
+						} else {
 							return P.reject( new SchemaError(
 								'max-value-exceeded',
 								"Field " + s.path + " is too large!"
@@ -61,7 +66,7 @@ module.exports.factory = function( P, oh, SchemaError ) {
 					return field;
 				} )
 			} );
-		}
+		} );
 
 		return c;
 	};

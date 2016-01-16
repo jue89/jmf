@@ -11,13 +11,17 @@ module.exports.factory = function( P, oh, SchemaError, extPattern ) {
 
 	return function( schema ) {
 		var c = [];
-		for( var s of schema.selectors ) {
+
+		schema.selectors.forEach( function( s ) {
 			if( s.def.type === undefined )
-				continue;
+				return;
 
 			c.push( {
 				priority: 80,
-				action: elem => s.select( elem, function( field ) {
+				action: s.select( function( field ) {
+
+					// we should not check types on undefined fields
+					if( field === undefined ) return;
 
 					var type = oh.gettype( field );
 					var expected = s.def.type;
@@ -38,7 +42,7 @@ module.exports.factory = function( P, oh, SchemaError, extPattern ) {
 				} )
 
 			} );
-		}
+		} );
 
 		return c;
 	};
