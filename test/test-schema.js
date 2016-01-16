@@ -4,6 +4,7 @@ var fireup = require( 'fire-up' ).newInjector( {
 	bustRequireCache: true,
 	require: require,
 	modules: [
+		'./modules/hooks/*.js',
 		'./modules/schema/*.js',
 		'./modules/objhelper/*.js'
 	]
@@ -42,13 +43,25 @@ describe( "Module schema", function() {
 		} );
 	} );
 
-	it( "should set missing sub-field to default", function( done ) {
+	it( "should apply default to array items", function( done ) {
 		var test = schema( {
-			'field.subfield': { default: 'test' }
+			'arr[].foo': { default: 'bar' }
+		} );
+
+		test( { arr: [ {}, { foo: 'baz' } ] } ).then( function ( e ) {
+			e.arr[0].foo.should.eql( 'bar' );
+			e.arr[1].foo.should.eql( 'baz' );
+			done();
+		} );
+	} );
+
+	it( "should set missing sub-sub-field to default", function( done ) {
+		var test = schema( {
+			'field.sub.subfield': { default: 'test' }
 		} );
 
 		test( {} ).then( function( e ) {
-			e.field.subfield.should.eql( 'test' );
+			e.field.sub.subfield.should.eql( 'test' );
 			done();
 		} );
 	} );
@@ -96,11 +109,64 @@ describe( "Module schema", function() {
 		} );
 	} );
 
+	it( "should not complain about defined field", function( done ) {
+		var test = schema( {
+			field: {}
+		} );
+
+		test( { 'field' : 'test' } ).then( function() {
+			done();
+		} );
+	} );
+
 	it( "should complain undefined field", function( done ) {
 		var test = schema( {
 		} );
 
 		test( { 'field' : 'test' } ).catch( function( e ) {
+			e.type.should.eql( 'illegal-field' );
+			done();
+		} );
+	} );
+
+	it( "should not complain about defined array field (implicit)", function( done ) {
+		var test = schema( {
+			'arr[]': {}
+		} );
+
+		test( { 'arr': [ 23, 42, 1337 ] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should not complain about defined array field (explicit)", function( done ) {
+		var test = schema( {
+			'arr': {}
+		} );
+
+		test( { 'arr': [ 23, 42, 1337 ] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+
+	it( "should complain about undefined fields in array", function( done ) {
+		var test = schema( {
+			'arr[]': {}
+		} );
+
+		test( { 'arr': [{ foo: 'baz' }] } ).catch( function( e ) {
+			e.type.should.eql( 'illegal-field' );
+			done();
+		} );
+	} );
+
+	it( "should complain about undefined sub-sub-fields", function( done ) {
+		var test = schema( {
+			testing: {}
+		} );
+
+		test( { testing: { a: { subsubfield: {} } } } ).catch( function( e ) {
 			e.type.should.eql( 'illegal-field' );
 			done();
 		} );
@@ -205,6 +271,16 @@ describe( "Module schema", function() {
 		} );
 
 		test( { 'field': [true] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should not complain about the type of undefined fields", function( done ) {
+		var test = schema( {
+			'field': { type: 'string' }
+		} );
+
+		test( {} ).then( function( ) {
 			done();
 		} );
 	} );
@@ -343,6 +419,65 @@ describe( "Module schema", function() {
 
 		test( { 'field': 2 } ).catch( function( e ) {
 			e.type.should.eql( 'min-value-dropped-below' );
+			done();
+		} );
+	} );
+
+	it( "should accept the right type of array items", function( done ) {
+		var test = schema( {
+			'field': { type: 'array' },
+			'field[]': { type: 'string' }
+		} );
+
+		test( { 'field': [ 'foo', 'bar', 'soup'] } ).then( function ( ) {
+			done();
+		} );
+	} );
+
+	it( "should complain about the type of array items", function( done ) {
+		var test = schema( {
+			'field': { type: 'array' },
+			'field[]': { type: 'string' }
+		} );
+
+		test( { 'field': [ 'foo', 'bar', 'soup', 42] } ).catch( function ( e ) {
+			e.type.should.eql( 'wrong-type' );
+			done();
+		} );
+	} );
+	
+	it( "should accept empty arrays also when they are marked as mandatory", function( done ) {
+		var test = schema( {
+			'field': { type: 'array', mandatory: true },
+			'field[].foo': { type: 'string' }
+		} );
+
+		test( { 'field': [] } ).then( function( ) {
+			done();
+		} );
+	} );
+
+	it( "should apply the mandatory to items of the array", function( done ) {
+		var test = schema( {
+			'box': { type: 'array' },
+			'box[].field': { mandatory: true }
+		} );
+
+		// This one should fail, because there is an item in the array
+		test({ 'box': [{}] }).catch( function( e ) {
+			e.type.should.eql( 'missing-field' );
+			done();
+		} );
+	} );
+
+	it( "should let empty arrays pass the mandatory checks of the items", function( done ) {
+		var test = schema( {
+			'box': { type: 'array' },
+			'box[].field': { mandatory: true }
+		} );
+
+		// Empty arrays should pass
+		test( { 'box': [] } ).then( function( ) {
 			done();
 		} );
 	} );

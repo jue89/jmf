@@ -4,171 +4,84 @@
 
 module.exports = {
 	implements: 'schema',
-	inject: [ 'require(bluebird)', 'require(util)', 'objhelper', 'schema/error', 'schema/pattern:*' ]
+	inject: [ 'require(bluebird)', 'chain', 'validator:*' ]
 };
 
-module.exports.factory = function( P, util, oh, SchemaError, extPattern ) {
-	
+module.exports.factory = function( P, chain, validators ) {
 
-	// Prepare external pattern
-	var pattern = {};
-	for( var p in extPattern ) oh.append( pattern, extPattern[p] );
-
-
-	// Factory 
 	return function( schema, ignoreUndefinedFields ) {
 
-		// Resolve external patterns
-		for( var s in schema ) {
-			if( pattern[ schema[s].type ] ) {
-				schema[s].pattern = pattern[ schema[s].type ];
-				schema[s].type = 'string';
+		function generateSelector( path ) {
+			function select( fun ) {
+				var walk = function( tail ) { return function( item ) {
+					// execute fun, if you are at a leaf
+					if( tail.length === 0 ) {
+						return P.method( fun )( item );
+					}
+
+					var newTail = tail.slice(1);
+					var walkDeeper = walk( newTail );
+					var head = tail[0];
+
+					var promise = null;
+					if( head.slice( -2 ) === '[]' ) {
+						// remove '[]' at the end of head
+						var h = head.slice( 0, -2 );
+
+						if( !( item[h] instanceof Array ) )
+							return P.resolve( item );
+
+						promise = P.map( item[h], walkDeeper );
+					} else if( item ) {
+						promise = walkDeeper( item[head] );
+					} else {
+						promise = walkDeeper( undefined );
+					}
+
+					// write back the results
+					promise = promise.then( function( res ) {
+						// create the item if needed
+						if( res !== undefined ) {
+							if( item === undefined ) item = {};
+
+							item[head] = res;
+						}
+
+						// delete the result from item if necessary
+						if( res === undefined ) {
+							delete item[head];
+						}
+
+						return item;
+					} );
+
+					return promise;
+				}; };
+
+				return walk( path.split('.') );
 			}
+
+			return {
+				path: path,
+				def: schema[path],
+				select: select
+			};
+
 		}
 
-		// Return check function (with fancy promises)
-		return function( obj ) { return new P( function( resolve, reject ) {
+		var s = {
+			def: schema,
+			selectors: Object.keys( schema ).map( generateSelector ),
+			ignoreUndefinedFields: ignoreUndefinedFields
+		};
 
-			var test = oh.depack( obj );
+		var c = [];
 
-			// Check for missing fields that are mandatory
-			for( var i in schema ) {
-				if( test[i] === undefined ) {
-					if( schema[i].mandatory ) {
-						return reject( new SchemaError(
-							'missing-field',
-							"Field " + i + " is missing."
-						) );
-					} else if( schema[i].default !== undefined ) {
-						if( schema[i].type == 'object' ) {
-							// If type is object it must be handled a little bit different ...
+		for( var v in validators ) {
+			var validator = validators[v];
+			c = c.concat( validator(s) );
+		}
 
-							// Search for childs
-							var found = false;
-							Object.keys(test).forEach( function( k ) {
-								found = found || k.substr( 0, i.length ) == i;
-							} );
-
-							// If child exists --> Roger that!
-							if( found ) continue;
-
-							// Else -> copy default to object
-							test[i] = {};
-							var defaultObj = oh.depack( schema[i].default );
-							for( var key in defaultObj ) {
-								// Make sure arrays are copied
-								if( defaultObj[ key ] instanceof Array ) {
-									test[ i + '.' + key ] = defaultObj[ key ].slice();
-								} else {
-									test[ i + '.' + key ] = defaultObj[ key ];
-								}
-							}
-						} else if( schema[i].type == 'array' ) {
-							// Copy arrays
-							test[i] = schema[i].default.slice();
-						} else {
-							test[i] = schema[i].default;
-						}
-					}
-				}
-			}
-			
-			// Check for undefined or check pattern
-			for( i in test ) {
-				// Check whether field is defined in schema
-				if( ! schema[i] ) {
-					// Let undefined fields pass if they should be ignored
-					if( ignoreUndefinedFields ) continue;
-
-					// If it's not defined, check for wildcard schema
-					var path = i.split( '.' );
-
-					// Iterate through path and search for wildcards (type=="object")
-					var ok = false;
-					while( path.length > 1 ) {
-						path.splice( path.length - 1, 1 );
-						var x = path.join( '.' );
-						if( schema[x] ) {
-							ok = (schema[x].type == "object");
-							break;
-						}
-					}
-
-					// No wildcard found
-					if( ! ok ) return reject( new SchemaError(
-						'illegal-field',
-						"Field " + i + " not allowed."
-					) );
-
-					// Its okay --> check next one
-					continue;
-				}
-
-				var type = oh.gettype( test[i] );
-
-				// Check for right data type
-				if( schema[i].type && type != schema[i].type ) {
-					return reject( new SchemaError(
-						'wrong-type',
-						"Field " + i + " has wrong type! " + schema[i].type + " expected."
-					) );
-				}
-
-				// Check for value
-				if( type == 'number' && schema[i].min !== undefined ) {
-					if( test[i] < schema[i].min ) {
-						return reject( new SchemaError(
-							'min-value-dropped-below',
-							"Field " + i + " is too small!"
-						) );
-					}
-				}
-				if( type == 'number' && schema[i].max !== undefined ) {
-					if( test[i] > schema[i].max ) {
-						return reject( new SchemaError(
-							'max-value-exceeded',
-							"Field " + i + " is too large!"
-						) );
-					}
-				}
-
-				// Check for length
-				if( ( type == 'string' || type == 'array') &&
-				    schema[i].min !== undefined ) {
-					if( test[i].length < schema[i].min ) {
-						return reject( new SchemaError(
-							'min-length-dropped-below',
-							"Field " + i + " is too short!"
-						) );
-					}
-				}
-				if( ( type == 'string' || type == 'array') &&
-				    schema[i].max !== undefined ) {
-					if( test[i].length > schema[i].max ) {
-						return reject( new SchemaError(
-							'max-length-exceeded',
-							"Field " + i + " is too long!"
-						) );
-					}
-				}
-
-				// Check for pattern
-				if( type == 'string' && schema[i].pattern ) {
-					if( oh.gettype( schema[i].pattern ) == "string" ) {
-						schema[i].pattern = new RegExp( schema[i].pattern );
-					}
-					
-					if( ! schema[i].pattern.test( test[i] ) ) {
-						return reject( new SchemaError(
-							'wrong-format',
-							"Field " + i + " has wrong format!"
-						) );
-					}
-				}
-			}
-
-			return resolve( oh.pack( test ) );
-			
-		} ); };
+		return chain( c );
 	};
 };

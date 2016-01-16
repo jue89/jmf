@@ -4,6 +4,7 @@ var fireupOpts = {
 	bustRequireCache: true,
 	require: require,
 	modules: [
+		'./modules/hooks/*.js',
 		'./modules/mongo/*.js',
 		'./modules/objhelper/*.js',
 		'./modules/schema/*.js',
